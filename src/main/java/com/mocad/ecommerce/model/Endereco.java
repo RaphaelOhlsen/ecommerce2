@@ -1,5 +1,7 @@
 package com.mocad.ecommerce.model;
 
+import com.mocad.ecommerce.enums.TipoEndereco;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -27,6 +29,9 @@ public class Endereco implements Serializable {
   private String cidade;
 
   private String uf;
+
+  @Enumerated(EnumType.STRING)
+  private TipoEndereco tipoEndereco;
 
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(
@@ -95,6 +100,14 @@ public class Endereco implements Serializable {
 
   public void setUf(String uf) {
     this.uf = uf;
+  }
+
+  public TipoEndereco getTipoEndereco() {
+    return tipoEndereco;
+  }
+
+  public void setTipoEndereco(TipoEndereco tipoEndereco) {
+    this.tipoEndereco = tipoEndereco;
   }
 
   public Pessoa getPessoa() {
