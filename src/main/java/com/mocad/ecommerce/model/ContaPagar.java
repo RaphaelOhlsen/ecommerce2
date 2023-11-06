@@ -1,7 +1,7 @@
 package com.mocad.ecommerce.model;
 
+
 import com.mocad.ecommerce.enums.StatusContaPagar;
-import com.mocad.ecommerce.enums.StatusContaReceber;
 
 import javax.persistence.*;
 import java.io.Serializable;
