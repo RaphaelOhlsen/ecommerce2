@@ -1,7 +1,7 @@
 package com.mocad.ecommerce.model;
 
+import com.mocad.ecommerce.enums.StatusContaPagar;
 import com.mocad.ecommerce.enums.StatusContaReceber;
-import com.mocad.ecommerce.enums.TipoEndereco;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,20 +9,24 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "conta_receber")
-@SequenceGenerator(name = "seq_conta_receber", sequenceName = "seq_conta_receber", allocationSize = 1, initialValue = 1)
-public class ContaReceber implements Serializable {
+@Table(name = "conta_pagar")
+@SequenceGenerator(name = "seq_conta_pagar", sequenceName = "seq_conta_pagar", allocationSize = 1, initialValue = 1)
+public class ContaPagar implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_conta_receber")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_conta_pagar")
   private Long id;
 
   private String descricao;
 
+  private BigDecimal valorTotal;
+
+  private BigDecimal valorDesconto;
+
   @Enumerated(EnumType.STRING)
-  private StatusContaReceber status;
+  private StatusContaPagar status;
 
   @Temporal(TemporalType.DATE)
   private Date dtVencimento;
@@ -30,14 +34,15 @@ public class ContaReceber implements Serializable {
   @Temporal(TemporalType.DATE)
   private Date dtPagamento;
 
-  private BigDecimal valorTotal;
-
-  private BigDecimal valorDesconto;
-
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name= "pessoa_fk"))
   private Pessoa pessoa;
+
+  @ManyToOne(targetEntity = Pessoa.class)
+  @JoinColumn(name = "pessoa_forn_id", nullable = false, foreignKey = @ForeignKey(
+          value = ConstraintMode.CONSTRAINT, name= "pessoa_forn_fk"))
+  private Pessoa pessoa_fornecedor;
 
   public Long getId() {
     return id;
@@ -55,11 +60,27 @@ public class ContaReceber implements Serializable {
     this.descricao = descricao;
   }
 
-  public StatusContaReceber getStatus() {
+  public BigDecimal getValorTotal() {
+    return valorTotal;
+  }
+
+  public void setValorTotal(BigDecimal valorTotal) {
+    this.valorTotal = valorTotal;
+  }
+
+  public BigDecimal getValorDesconto() {
+    return valorDesconto;
+  }
+
+  public void setValorDesconto(BigDecimal valorDesconto) {
+    this.valorDesconto = valorDesconto;
+  }
+
+  public StatusContaPagar getStatus() {
     return status;
   }
 
-  public void setStatus(StatusContaReceber status) {
+  public void setStatus(StatusContaPagar status) {
     this.status = status;
   }
 
@@ -79,28 +100,20 @@ public class ContaReceber implements Serializable {
     this.dtPagamento = dtPagamento;
   }
 
-  public BigDecimal getValorTotal() {
-    return valorTotal;
-  }
-
-  public void setValorTotal(BigDecimal valorTotal) {
-    this.valorTotal = valorTotal;
-  }
-
-  public BigDecimal getValorDesconto() {
-    return valorDesconto;
-  }
-
-  public void setValorDesconto(BigDecimal valorDesconto) {
-    this.valorDesconto = valorDesconto;
-  }
-
   public Pessoa getPessoa() {
     return pessoa;
   }
 
   public void setPessoa(Pessoa pessoa) {
     this.pessoa = pessoa;
+  }
+
+  public Pessoa getPessoa_fornecedor() {
+    return pessoa_fornecedor;
+  }
+
+  public void setPessoa_fornecedor(Pessoa pessoa_fornecedor) {
+    this.pessoa_fornecedor = pessoa_fornecedor;
   }
 
   @Override
@@ -114,7 +127,7 @@ public class ContaReceber implements Serializable {
   public boolean equals(Object obj) {
     if (this == obj) return true;
     if (obj == null || getClass() != obj.getClass()) return false;
-    ContaReceber other = (ContaReceber) obj;
+    ContaPagar other = (ContaPagar) obj;
     if (id == null) {
       if (other.id != null) return false;
     } else if (!id.equals(other.id))
