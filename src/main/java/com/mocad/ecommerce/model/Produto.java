@@ -23,8 +23,6 @@ public class Produto implements Serializable {
   @Column(columnDefinition = "text", length = 2000)
   private String descricao;
 
-  /**Nota item nota produto  - ASSOCIAR **/
-
   private Double peso;
 
   private Double largura;
