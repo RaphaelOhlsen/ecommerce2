@@ -4,25 +4,29 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "status_rastreio")
-@SequenceGenerator(name = "seq_status_rastreio", sequenceName = "seq_status_rastreio", allocationSize = 1, initialValue = 1)
-public class StatusRastreio implements Serializable {
+@Table(name = "nota_fiscal_venda")
+@SequenceGenerator(name = "seq_nota_fiscal_venda", sequenceName = "seq_nota_fiscal_venda", allocationSize = 1, initialValue = 1)
+public class NotaFiscalVenda implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_status_rastreio")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_nota_fiscal_venda")
   private Long id;
 
-  private String centroDistribuicao;
+  private String numero;
 
-  private String cidade;
+  private String serie;
 
-  private String estado;
+  private String tipo;
 
-  private String status;
+  @Column(columnDefinition = "text")
+  private String xml;
 
-  @ManyToOne
+  @Column(columnDefinition = "text")
+  private String pdf;
+
+  @OneToOne
   @JoinColumn(name = "vd_cp_loja_virt_id", nullable = false, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name = "vd_cp_loja_virt_fk"))
   private VendaCompraLojaVirtual vendaCompraLojaVirtual;
@@ -35,36 +39,44 @@ public class StatusRastreio implements Serializable {
     this.id = id;
   }
 
-  public String getCentroDistribuicao() {
-    return centroDistribuicao;
+  public String getNumero() {
+    return numero;
   }
 
-  public void setCentroDistribuicao(String centroDistribuicao) {
-    this.centroDistribuicao = centroDistribuicao;
+  public void setNumero(String numero) {
+    this.numero = numero;
   }
 
-  public String getCidade() {
-    return cidade;
+  public String getSerie() {
+    return serie;
   }
 
-  public void setCidade(String cidade) {
-    this.cidade = cidade;
+  public void setSerie(String serie) {
+    this.serie = serie;
   }
 
-  public String getEstado() {
-    return estado;
+  public String getTipo() {
+    return tipo;
   }
 
-  public void setEstado(String estado) {
-    this.estado = estado;
+  public void setTipo(String tipo) {
+    this.tipo = tipo;
   }
 
-  public String getStatus() {
-    return status;
+  public String getXml() {
+    return xml;
   }
 
-  public void setStatus(String status) {
-    this.status = status;
+  public void setXml(String xml) {
+    this.xml = xml;
+  }
+
+  public String getPdf() {
+    return pdf;
+  }
+
+  public void setPdf(String pdf) {
+    this.pdf = pdf;
   }
 
   public VendaCompraLojaVirtual getVendaCompraLojaVirtual() {
@@ -88,7 +100,7 @@ public class StatusRastreio implements Serializable {
       return true;
     if (obj == null || getClass() != obj.getClass())
       return false;
-    StatusRastreio other = (StatusRastreio) obj;
+    NotaFiscalVenda other = (NotaFiscalVenda) obj;
     if (id == null) {
       if (other.id != null) return false;
     } else if (!id.equals(other.id))
