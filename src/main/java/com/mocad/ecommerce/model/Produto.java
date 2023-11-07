@@ -176,7 +176,7 @@ public class Produto implements Serializable {
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
-    if (!(obj instanceof Produto))
+    if (obj == null || getClass() != obj.getClass())
       return false;
     Produto other = (Produto) obj;
     if (id == null) {
