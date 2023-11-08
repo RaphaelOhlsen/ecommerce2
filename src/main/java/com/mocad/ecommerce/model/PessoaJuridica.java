@@ -14,12 +14,15 @@ public class PessoaJuridica  extends Pessoa {
   @Column(nullable = false)
   private String cnpj;
 
+  @Column(nullable = false)
   private String inscEstadual;
 
   private String inscMunicipal;
 
+  @Column(nullable = false)
   private String razaoSocial;
 
+  @Column(nullable = false)
   private String nomeFantasia;
 
   private String categoria;
@@ -71,4 +74,5 @@ public class PessoaJuridica  extends Pessoa {
   public void setCategoria(String categoria) {
     this.categoria = categoria;
   }
+
 }

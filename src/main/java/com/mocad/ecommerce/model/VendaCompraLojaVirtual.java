@@ -16,17 +16,22 @@ public class VendaCompraLojaVirtual implements Serializable {
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_vd_cp_loja_virt")
   private Long id;
 
+  @Column(nullable = false)
   private BigDecimal valorTotal;
 
   private BigDecimal valorDesconto;
 
+  @Column(nullable = false)
   private BigDecimal valorFrete;
 
+  @Column(nullable = false)
   private int dias_entrega;
 
+  @Column(nullable = false)
   @Temporal(TemporalType.DATE)
   private Date dataVenda;
 
+  @Column(nullable = false)
   @Temporal(TemporalType.DATE)
   private Date dataEntrega;
 
@@ -51,7 +56,7 @@ public class VendaCompraLojaVirtual implements Serializable {
   private NotaFiscalVenda notaFiscalVenda;
 
   @ManyToOne
-  @JoinColumn(name = "cup_desc_id", nullable = false, foreignKey = @ForeignKey(
+  @JoinColumn(name = "cup_desc_id", foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name = "cup_desc_fk"))
   private CupDesc cupDesc;
 

@@ -13,11 +13,10 @@ public class Acesso implements GrantedAuthority {
   private static final long serialVersionUID = 1L;
 
   @Id
-
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_acesso")
   private Long id;
 
-  @Column(name = "descricao", nullable = false)
+  @Column(nullable = false)
   private String descricao; /* Acesso ex: ROLE_ADMIN, ROLE_USUARIO */
 
   @Override
