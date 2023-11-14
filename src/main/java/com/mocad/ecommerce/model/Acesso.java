@@ -2,6 +2,8 @@ package com.mocad.ecommerce.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -19,6 +21,7 @@ public class Acesso implements GrantedAuthority {
   @Column(nullable = false)
   private String descricao; /* Acesso ex: ROLE_ADMIN, ROLE_USUARIO */
 
+  @JsonIgnore
   @Override
   public String getAuthority() {
     return this.descricao;
