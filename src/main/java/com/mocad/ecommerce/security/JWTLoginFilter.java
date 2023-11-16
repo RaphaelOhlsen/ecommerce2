@@ -20,38 +20,41 @@ import com.mocad.ecommerce.model.Usuario;
 
 
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
+	
+	/*Confgurando o gerenciado de autenticacao*/
+	public JWTLoginFilter(String url, AuthenticationManager authenticationManager) {
+	
+		/*Ibriga a autenticat a url*/
+		super(new AntPathRequestMatcher(url));
+		
+		/*Gerenciador de autenticao*/
+		setAuthenticationManager(authenticationManager);
+		
+	}
 
-    /*Confgurando o gerenciado de autenticacao*/
-    public JWTLoginFilter(String url, AuthenticationManager authenticationManager) {
+	
+	/*Retorna o usuário ao processr a autenticacao*/
+	@Override
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+			throws AuthenticationException, IOException, ServletException {
+		/*Obter o usuário*/
+		Usuario user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
+		
+		/*Retorna o user com login e senha*/
+		return getAuthenticationManager().
+				authenticate(new UsernamePasswordAuthenticationToken(user.getLogin(), user.getSenha()));
+	}
+	
+	@Override
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+			Authentication authResult) throws IOException, ServletException {
 
-        /*Obriga a autenticar a url*/
-        super(new AntPathRequestMatcher(url));
+		try {
+			new JWTTokenAutenticacaoService().addAuthentication(response, authResult.getName());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-        /*Gerenciador de autenticacao*/
-        setAuthenticationManager(authenticationManager);
-
-    }
-
-    /*Retorna o usuário ao processr a autenticacao*/
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
-        /*Obter o usuário*/
-        Usuario user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
-
-        /*Retorna o user com login e senha*/
-        return getAuthenticationManager().
-                authenticate(new UsernamePasswordAuthenticationToken(user.getLogin(), user.getSenha()));
-    }
-
-    @Override
-    protected void successfulAuthentication(
-            HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
-            throws IOException, ServletException {
-        try {
-            new JWTTokenAutenticacaoService().addAuthentication(response, authResult.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
