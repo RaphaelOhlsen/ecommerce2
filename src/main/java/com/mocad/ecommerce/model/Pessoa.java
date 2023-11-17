@@ -30,6 +30,11 @@ public abstract class Pessoa implements Serializable {
   @OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<Endereco> enderecos = new ArrayList<Endereco>();
 
+  @ManyToOne(targetEntity = Pessoa.class)
+  @JoinColumn(name = "empresa_id", nullable = true,
+          foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
+  private Pessoa empresa;
+
   public Long getId() {
     return id;
   }
@@ -78,7 +83,7 @@ public List<Endereco> getEnderecos() {
     return enderecos;
   }
 
-  public void setEnderecos(List<Endereco> enderecos) {
+public void setEnderecos(List<Endereco> enderecos) {
     this.enderecos = enderecos;
   }
 

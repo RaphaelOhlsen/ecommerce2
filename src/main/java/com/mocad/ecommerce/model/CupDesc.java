@@ -19,6 +19,10 @@ public class CupDesc implements Serializable {
   @Column(nullable = false)
   private String codDesc;
 
+  @ManyToOne(targetEntity = Pessoa.class)
+  @JoinColumn(name = "empresa_id", nullable = false,
+          foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
+  private Pessoa empresa;
 
   private BigDecimal valorRealDesc;
 
@@ -66,6 +70,18 @@ public class CupDesc implements Serializable {
 
   public void setDataValidadeCumpom(Date dataValidadeCupom) {
     this.dataValidadeCupom = dataValidadeCupom;
+  }
+
+  public void setDataValidadeCupom(Date dataValidadeCupom) {
+    this.dataValidadeCupom = dataValidadeCupom;
+  }
+
+  public Pessoa getEmpresa() {
+    return empresa;
+  }
+
+  public void setEmpresa(Pessoa empresa) {
+    this.empresa = empresa;
   }
 
   @Override

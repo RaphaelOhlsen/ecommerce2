@@ -24,6 +24,11 @@ public class AvaliacaoProduto implements Serializable {
           value = ConstraintMode.CONSTRAINT, name= "pessoa_fk"))
   private Pessoa pessoa;
 
+  @ManyToOne(targetEntity = Pessoa.class)
+  @JoinColumn(name = "empresa_id", nullable = false,
+          foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
+  private Pessoa empresa;
+
   @ManyToOne
   @JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name= "produto_fk"))
@@ -63,6 +68,14 @@ public class AvaliacaoProduto implements Serializable {
 
   public Produto getProduto() {
     return produto;
+  }
+
+  public Pessoa getEmpresa() {
+    return empresa;
+  }
+
+  public void setEmpresa(Pessoa empresa) {
+    this.empresa = empresa;
   }
 
   public void setProduto(Produto produto) {
