@@ -1,5 +1,6 @@
 package com.mocad.ecommerce.controller;
 
+import com.mocad.ecommerce.ExceptionEcommerce;
 import com.mocad.ecommerce.model.Acesso;
 import com.mocad.ecommerce.repository.AcessoRepository;
 import com.mocad.ecommerce.service.AcessoService;
@@ -57,9 +58,13 @@ public class AcessoController {
   
   @ResponseBody
   @GetMapping(value = "**/obeterAcesso/{id}") /*Mapeando a url para receber JSON*/
-	public ResponseEntity<?> obeterAcesso(@PathVariable Long id) {
+	public ResponseEntity<?> obeterAcesso(@PathVariable Long id) throws ExceptionEcommerce {
 		
-		Acesso acesso = acessoRepository.findById(id).get();
+		Acesso acesso = acessoRepository.findById(id).orElse(null);
+
+		if (acesso == null) {
+			throw new ExceptionEcommerce("Acesso "+ id + " não encontrado");
+		}
 		
 		return new ResponseEntity<Acesso>(acesso, HttpStatus.OK);
 	}

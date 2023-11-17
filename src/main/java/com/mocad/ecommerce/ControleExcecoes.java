@@ -8,14 +8,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@RestControllerAdvice
+@ControllerAdvice
 public class ControleExcecoes extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler({ExceptionEcommerce.class})
+    public ResponseEntity<Object> handleExceptionCustom (ExceptionEcommerce ex){
+        ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
+        objetoErroDTO.setError(ex.getMessage());
+        objetoErroDTO.setCode(HttpStatus.OK.toString());
+        return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.OK);
+    }
+
     /*Captura execeçoes do projeto*/
     @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
     @Override
