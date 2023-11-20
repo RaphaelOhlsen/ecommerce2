@@ -1,6 +1,7 @@
 package com.mocad.ecommerce;
 
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ public class EcommerceApplicationTests extends TestCase{
 	    
 	    Acesso acesso = new Acesso();
 	    
-	    acesso.setDescricao("ROLE_COMPRADOR");
+	    acesso.setDescricao("ROLE_COMPRADOR" + Calendar.getInstance().getTimeInMillis());
 	    
 	    ObjectMapper objectMapper = new ObjectMapper();
 	    
@@ -192,15 +193,21 @@ public class EcommerceApplicationTests extends TestCase{
 	}
 
 	@Test
-	public void testCadastraAcesso() {
+	public void testCadastraAcesso() throws ExceptionEcommerce {
 
 		Acesso acesso =  new Acesso();
 
-		acesso.setDescricao("ROLE_USER");
+		double numeroDecimal = Math.random();
+
+		int numeroInteiro = (int) (numeroDecimal * 10000);
+
+		String descricao = "ROLE_USER"+numeroInteiro;
+
+		acesso.setDescricao(descricao);
 
 		acesso = acessoController.salvarAcesso(acesso).getBody();
 		
-		assertEquals(true, acesso.getId() > 0);
+		assertEquals(descricao, acesso.getDescricao());
 		
 		/* Teste de Carregamento */
 		

@@ -87,6 +87,14 @@ public void setEnderecos(List<Endereco> enderecos) {
     this.enderecos = enderecos;
   }
 
+public Pessoa getEmpresa() {
+  return empresa;
+}
+
+public void setEmpresa(Pessoa empresa) {
+  this.empresa = empresa;
+}
+
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;
