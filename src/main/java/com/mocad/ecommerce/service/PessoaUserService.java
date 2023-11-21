@@ -57,6 +57,7 @@ public class PessoaUserService {
             usuarioPJ = usuarioRepository.save(usuarioPJ);
 
             usuarioRepository.inserirAcessoUsuarioPJ(usuarioPJ.getId());
+            usuarioRepository.inserirAcessoUsuarioPJ(usuarioPJ.getId(), "ROLE_ADMIN");
 
             StringBuilder menssagemHtml = new StringBuilder();
 
