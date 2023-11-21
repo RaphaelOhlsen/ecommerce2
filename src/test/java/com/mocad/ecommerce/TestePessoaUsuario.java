@@ -29,9 +29,9 @@ public class TestePessoaUsuario extends TestCase{
 
         pessoaJuridica.setCnpj(""+ Calendar.getInstance().getTimeInMillis());
         pessoaJuridica.setNome("Raphael Ohlsen");
-        pessoaJuridica.setEmail("admin@teste.com");
+        pessoaJuridica.setEmail("mocad.flint@gmail.com");
         pessoaJuridica.setTelefone("119999934994");
-        pessoaJuridica.setInscEstadual("12345678904");
+        pessoaJuridica.setInscEstadual("123456d789043");
         pessoaJuridica.setInscMunicipal("12345678904");
         pessoaJuridica.setNomeFantasia("Armazem Raphael");
         pessoaJuridica.setRazaoSocial("Armazem Raphael LTDA");
