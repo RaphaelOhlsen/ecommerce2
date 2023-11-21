@@ -1,5 +1,6 @@
 package com.mocad.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mocad.ecommerce.enums.TipoEndereco;
 
 import javax.persistence.*;
@@ -40,11 +41,13 @@ public class Endereco implements Serializable {
   @Enumerated(EnumType.STRING)
   private TipoEndereco tipoEndereco;
 
+  @JsonIgnore
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name= "pessoa_fk"))
   private Pessoa pessoa;
 
+  @JsonIgnore
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "empresa_id", nullable = false,
           foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))

@@ -24,6 +24,12 @@ public class PessoaUserService {
     private JdbcTemplate jdbcTemplate;
 
     public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pessoaJuridica) {
+
+        for (int i = 0; i < pessoaJuridica.getEnderecos().size(); i++) {
+            pessoaJuridica.getEnderecos().get(i).setPessoa(pessoaJuridica);
+            pessoaJuridica.getEnderecos().get(i).setEmpresa(pessoaJuridica);
+        }
+
         pessoaJuridica = pessoaRepository.save(pessoaJuridica);
 
         Usuario usuarioPJ = usuarioRepository.findUserByPessoa(pessoaJuridica.getId(), pessoaJuridica.getEmail());
