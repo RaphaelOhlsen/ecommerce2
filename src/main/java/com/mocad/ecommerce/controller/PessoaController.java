@@ -4,6 +4,7 @@ import com.mocad.ecommerce.ExceptionEcommerce;
 import com.mocad.ecommerce.model.PessoaJuridica;
 import com.mocad.ecommerce.repository.PessoaRepository;
 import com.mocad.ecommerce.service.PessoaUserService;
+import com.mocad.ecommerce.utils.ValidaCNPJ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,14 @@ public class PessoaController {
 		}
 		if (pessoaJuridica.getId() == null && pessoaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()) != null) {
 			throw new ExceptionEcommerce("CNPJ já cadastrado");
+		}
+
+		if (pessoaJuridica.getId() == null && pessoaRepository.existeInscEstadualCadastrado(pessoaJuridica.getInscEstadual()) != null) {
+			throw new ExceptionEcommerce("Inscrição Estadual já cadastrada");
+		}
+
+		if (!ValidaCNPJ.isCNPJ(pessoaJuridica.getCnpj())) {
+			throw new ExceptionEcommerce("CNPJ" + pessoaJuridica.getCnpj() + " inválido.");
 		}
 
 		pessoaJuridica = pessoaUserService.salvarPessoaJuridica(pessoaJuridica);
