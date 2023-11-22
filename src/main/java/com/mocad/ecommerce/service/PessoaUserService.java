@@ -1,7 +1,9 @@
 package com.mocad.ecommerce.service;
 
+import com.mocad.ecommerce.model.PessoaFisica;
 import com.mocad.ecommerce.model.PessoaJuridica;
 import com.mocad.ecommerce.model.Usuario;
+import com.mocad.ecommerce.repository.PessoaFisicaRepository;
 import com.mocad.ecommerce.repository.PessoaRepository;
 import com.mocad.ecommerce.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class PessoaUserService {
 
     @Autowired
     private PessoaRepository pessoaRepository;
+
+    @Autowired
+    private PessoaFisicaRepository pessoaFisicaRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -56,7 +61,7 @@ public class PessoaUserService {
 
             usuarioPJ = usuarioRepository.save(usuarioPJ);
 
-            usuarioRepository.inserirAcessoUsuarioPJ(usuarioPJ.getId());
+            usuarioRepository.inserirAcessoUsuario(usuarioPJ.getId());
             usuarioRepository.inserirAcessoUsuarioPJ(usuarioPJ.getId(), "ROLE_ADMIN");
 
             StringBuilder menssagemHtml = new StringBuilder();
@@ -75,6 +80,47 @@ public class PessoaUserService {
         }
 
         return pessoaJuridica;
+    }
+
+    public PessoaFisica salvarPessoaFisica (PessoaFisica pessoaFisica) {
+        for (int i = 0; i < pessoaFisica.getEnderecos().size(); i++) {
+            pessoaFisica.getEnderecos().get(i).setPessoa(pessoaFisica);
+            pessoaFisica.getEnderecos().get(i).setEmpresa(pessoaFisica);
+        }
+
+        pessoaFisica = pessoaFisicaRepository.save(pessoaFisica);
+
+        Usuario usuarioPF = usuarioRepository.findUserByPessoa(pessoaFisica.getId(), pessoaFisica.getEmail());
+
+        usuarioPF = new Usuario();
+        usuarioPF.setDataAtualSenha(Calendar.getInstance().getTime());
+        usuarioPF.setEmpresa(pessoaFisica);
+        usuarioPF.setPessoa(pessoaFisica);
+        usuarioPF.setLogin(pessoaFisica.getEmail());
+
+        String senha = "" + Calendar.getInstance().getTimeInMillis();
+        String senhaCript = new BCryptPasswordEncoder().encode(senha);
+
+        usuarioPF.setSenha(senhaCript);
+
+        usuarioPF = usuarioRepository.save(usuarioPF);
+
+        usuarioRepository.inserirAcessoUsuario(usuarioPF.getId());
+
+        StringBuilder menssagemHtml = new StringBuilder();
+
+        menssagemHtml.append("<b>Segue abaixo seus dados de acesso para a loja virtual</b><br/>");
+        menssagemHtml.append("<b>Login: </b>").append(pessoaFisica.getEmail()).append("<br/>");
+        menssagemHtml.append("<b>Senha: </b>").append(senha).append("<br/><br/>");
+        menssagemHtml.append("Obrigado!");
+
+        try {
+            serviceSendEmail.enviarEmailHtml("Acesso Gerado para Loja Virtual", menssagemHtml.toString() , pessoaFisica.getEmail());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pessoaFisica;
     }
 
 }

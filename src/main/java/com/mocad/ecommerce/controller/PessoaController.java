@@ -1,10 +1,12 @@
 package com.mocad.ecommerce.controller;
 
 import com.mocad.ecommerce.ExceptionEcommerce;
+import com.mocad.ecommerce.model.PessoaFisica;
 import com.mocad.ecommerce.model.PessoaJuridica;
 import com.mocad.ecommerce.repository.PessoaRepository;
 import com.mocad.ecommerce.service.PessoaUserService;
 import com.mocad.ecommerce.utils.ValidaCNPJ;
+import com.mocad.ecommerce.utils.ValidaCPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -42,6 +44,28 @@ public class PessoaController {
 		pessoaJuridica = pessoaUserService.salvarPessoaJuridica(pessoaJuridica);
 
 		return ResponseEntity.ok(pessoaJuridica);
+	}
+
+	@ResponseBody
+	@PostMapping(value = "**/salvarPF")
+	public ResponseEntity<PessoaFisica> salvarPF(@RequestBody PessoaFisica pessoaFisica) throws ExceptionEcommerce {
+		if (pessoaFisica == null) {
+			throw new ExceptionEcommerce("Pessoa Física não pode ser nula");
+		}
+
+		if (!ValidaCPF.isCPF(pessoaFisica.getCpf())) {
+			throw new ExceptionEcommerce("CPF" + pessoaFisica.getCpf() + " inválido.");
+		}
+
+		if (pessoaFisica.getId() == null && pessoaRepository.existeCpfCadastrado(pessoaFisica.getCpf()) != null) {
+			throw new ExceptionEcommerce("CPF " + pessoaFisica.getCpf() + "já cadastrado");
+		}
+
+
+
+		pessoaFisica = pessoaUserService.salvarPessoaFisica(pessoaFisica);
+
+		return ResponseEntity.ok(pessoaFisica);
 	}
     
 }
