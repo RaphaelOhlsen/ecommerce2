@@ -1,4 +1,5 @@
 package com.mocad.ecommerce.repository;
+import com.mocad.ecommerce.model.PessoaFisica;
 import com.mocad.ecommerce.model.PessoaJuridica;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -10,8 +11,8 @@ public interface PessoaRepository extends CrudRepository<PessoaJuridica, Long> {
     public PessoaJuridica existeCnpjCadastrado(String cnpj);
 
     @Query(value = "select pf from PessoaFisica pf where pf.cpf = ?1")
-    public PessoaJuridica existeCpfCadastrado(String cnpj);
+    public PessoaFisica existeCpfCadastrado(String cpf);
 
-    @Query(value = "select inscEstadual from PessoaJuridica inscEstadual where pj.inscEstadual = ?1")
+    @Query(value = "select pj from PessoaJuridica pj where pj.inscEstadual = ?1")
     public PessoaJuridica existeInscEstadualCadastrado(String inscEstadual);
 }

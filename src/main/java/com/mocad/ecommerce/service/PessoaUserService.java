@@ -85,7 +85,7 @@ public class PessoaUserService {
     public PessoaFisica salvarPessoaFisica (PessoaFisica pessoaFisica) {
         for (int i = 0; i < pessoaFisica.getEnderecos().size(); i++) {
             pessoaFisica.getEnderecos().get(i).setPessoa(pessoaFisica);
-            pessoaFisica.getEnderecos().get(i).setEmpresa(pessoaFisica);
+//            pessoaFisica.getEnderecos().get(i).setEmpresa(pessoaFisica);
         }
 
         pessoaFisica = pessoaFisicaRepository.save(pessoaFisica);
@@ -94,7 +94,7 @@ public class PessoaUserService {
 
         usuarioPF = new Usuario();
         usuarioPF.setDataAtualSenha(Calendar.getInstance().getTime());
-        usuarioPF.setEmpresa(pessoaFisica);
+        usuarioPF.setEmpresa(pessoaFisica.getEmpresa());
         usuarioPF.setPessoa(pessoaFisica);
         usuarioPF.setLogin(pessoaFisica.getEmail());
 

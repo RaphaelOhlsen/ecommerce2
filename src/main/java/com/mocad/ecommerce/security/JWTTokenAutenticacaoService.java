@@ -6,8 +6,10 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mocad.ecommerce.ApplicationContextLoad;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import com.mocad.ecommerce.ApplicationContextLoad;
 import com.mocad.ecommerce.model.Usuario;
 import com.mocad.ecommerce.repository.UsuarioRepository;
 
@@ -25,7 +26,7 @@ import com.mocad.ecommerce.repository.UsuarioRepository;
 @Service
 @Component
 public class JWTTokenAutenticacaoService {
-	
+
 	
 	/*Token de validade de 11 dias*/
 	private static final long EXPIRATION_TIME = 959990000;
