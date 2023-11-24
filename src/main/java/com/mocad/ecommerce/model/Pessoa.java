@@ -1,6 +1,7 @@
 package com.mocad.ecommerce.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,12 @@ public abstract class Pessoa implements Serializable {
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pessoa")
   private Long id;
 
+  @Size(min = 4, message = "O nome deve ter no minimo 4 letras")
+  @NotBlank(message = "Nome deve ser informado")
+  @NotNull(message = "Nome deve ser informado")
   @Column(nullable = false)
   private String nome;
-
+  @Email(message = "Email inválido")
   @Column(nullable = false, unique = true)
   private String email;
 

@@ -1,5 +1,7 @@
 package com.mocad.ecommerce.model;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -9,6 +11,7 @@ import java.util.Date;
 public class PessoaFisica extends Pessoa {
   private static final long serialVersionUID = 1L;
 
+  @CPF(message = "CPF inválido")
   @Column(nullable = false)
   private String cpf;
 

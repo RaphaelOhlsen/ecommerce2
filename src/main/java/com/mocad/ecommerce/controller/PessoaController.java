@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 public class PessoaController {
 	@Autowired
@@ -25,10 +27,11 @@ public class PessoaController {
 
 	@ResponseBody
 	@PostMapping(value = "**/salvarPJ")
-	public ResponseEntity<PessoaJuridica> salvarPJ(@RequestBody PessoaJuridica pessoaJuridica) throws ExceptionEcommerce {
+	public ResponseEntity<PessoaJuridica> salvarPJ(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws ExceptionEcommerce {
 		if (pessoaJuridica == null) {
 			throw new ExceptionEcommerce("Pessoa Juridica não pode ser nula");
 		}
+		
 		if (pessoaJuridica.getId() == null && pessoaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()) != null) {
 			throw new ExceptionEcommerce("CNPJ já cadastrado");
 		}
