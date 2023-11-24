@@ -3,6 +3,7 @@ package com.mocad.ecommerce.controller;
 import com.mocad.ecommerce.ExceptionEcommerce;
 import com.mocad.ecommerce.model.PessoaFisica;
 import com.mocad.ecommerce.model.PessoaJuridica;
+import com.mocad.ecommerce.model.dto.CepDTO;
 import com.mocad.ecommerce.repository.PessoaRepository;
 import com.mocad.ecommerce.service.PessoaUserService;
 import com.mocad.ecommerce.utils.ValidaCNPJ;
@@ -10,10 +11,7 @@ import com.mocad.ecommerce.utils.ValidaCPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -24,6 +22,12 @@ public class PessoaController {
 
 	@Autowired
 	private PessoaUserService pessoaUserService;
+
+	@ResponseBody
+	@GetMapping(value = "**/consultaCep/{cep}")
+	public ResponseEntity<CepDTO> consultaCep(@PathVariable("cep") String cep){
+		return ResponseEntity.ok(pessoaUserService.consultaCep(cep));
+	}
 
 	@ResponseBody
 	@PostMapping(value = "**/salvarPJ")
