@@ -1,9 +1,11 @@
 package com.mocad.ecommerce.controller;
 
 import com.mocad.ecommerce.ExceptionEcommerce;
+import com.mocad.ecommerce.model.Endereco;
 import com.mocad.ecommerce.model.PessoaFisica;
 import com.mocad.ecommerce.model.PessoaJuridica;
 import com.mocad.ecommerce.model.dto.CepDTO;
+import com.mocad.ecommerce.repository.EnderecoRepository;
 import com.mocad.ecommerce.repository.PessoaRepository;
 import com.mocad.ecommerce.service.PessoaUserService;
 import com.mocad.ecommerce.utils.ValidaCNPJ;
@@ -22,6 +24,9 @@ public class PessoaController {
 
 	@Autowired
 	private PessoaUserService pessoaUserService;
+
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 
 	@ResponseBody
 	@GetMapping(value = "**/consultaCep/{cep}")
@@ -46,6 +51,38 @@ public class PessoaController {
 
 		if (!ValidaCNPJ.isCNPJ(pessoaJuridica.getCnpj())) {
 			throw new ExceptionEcommerce("CNPJ" + pessoaJuridica.getCnpj() + " inválido.");
+		}
+
+		if (pessoaJuridica.getId() == null || pessoaJuridica.getId() <= 0) {
+
+			for (int p = 0; p < pessoaJuridica.getEnderecos().size(); p++) {
+
+				CepDTO cepDTO = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
+
+				pessoaJuridica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
+				pessoaJuridica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
+				pessoaJuridica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
+				pessoaJuridica.getEnderecos().get(p).setRuaLogra(cepDTO.getLogradouro());
+				pessoaJuridica.getEnderecos().get(p).setUf(cepDTO.getUf());
+
+			}
+		} else {
+
+			for (int p = 0; p < pessoaJuridica.getEnderecos().size(); p++) {
+
+				Endereco enderecoTemp =  enderecoRepository.findById(pessoaJuridica.getEnderecos().get(p).getId()).get();
+
+				if (!enderecoTemp.getCep().equals(pessoaJuridica.getEnderecos().get(p).getCep())) {
+
+					CepDTO cepDTO = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
+
+					pessoaJuridica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
+					pessoaJuridica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
+					pessoaJuridica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
+					pessoaJuridica.getEnderecos().get(p).setRuaLogra(cepDTO.getLogradouro());
+					pessoaJuridica.getEnderecos().get(p).setUf(cepDTO.getUf());
+				}
+			}
 		}
 
 		pessoaJuridica = pessoaUserService.salvarPessoaJuridica(pessoaJuridica);
