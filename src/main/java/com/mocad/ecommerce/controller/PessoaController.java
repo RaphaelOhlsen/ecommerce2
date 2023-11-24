@@ -6,16 +6,20 @@ import com.mocad.ecommerce.model.PessoaFisica;
 import com.mocad.ecommerce.model.PessoaJuridica;
 import com.mocad.ecommerce.model.dto.CepDTO;
 import com.mocad.ecommerce.repository.EnderecoRepository;
+import com.mocad.ecommerce.repository.PessoaFisicaRepository;
 import com.mocad.ecommerce.repository.PessoaRepository;
 import com.mocad.ecommerce.service.PessoaUserService;
 import com.mocad.ecommerce.utils.ValidaCNPJ;
 import com.mocad.ecommerce.utils.ValidaCPF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class PessoaController {
@@ -27,6 +31,52 @@ public class PessoaController {
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+
+	@Autowired
+	private PessoaFisicaRepository pessoaFisicaRepository;
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
+	@ResponseBody
+	@GetMapping(value = "**/consultaPfNome/{nome}")
+	public ResponseEntity<List<PessoaFisica>> consultaPfNome(@PathVariable("nome") String nome) {
+
+		List<PessoaFisica> fisicas = pessoaFisicaRepository.pesquisaPorNomePF(nome.trim().toUpperCase());
+
+//		jdbcTemplate.execute("begin; update tabela_acesso_end_potin set qtd_acesso_end_point = qtd_acesso_end_point + 1 where nome_end_point = 'END-POINT-NOME-PESSOA-FISICA'; commit;");
+
+		return ResponseEntity.ok(fisicas);
+	}
+
+
+	@ResponseBody
+	@GetMapping(value = "**/consultaCpf/{cpf}")
+	public ResponseEntity<List<PessoaFisica>> consultaCpf(@PathVariable("cpf") String cpf) {
+
+		List<PessoaFisica> fisicas = pessoaFisicaRepository.pesquisaPorCpfPF(cpf);
+
+		return ResponseEntity.ok(fisicas);
+	}
+
+
+	@ResponseBody
+	@GetMapping(value = "**/consultaPjNome/{nome}")
+	public ResponseEntity<List<PessoaJuridica>> consultaPjNome(@PathVariable("nome") String nome) {
+
+		List<PessoaJuridica> juridicas = pessoaRepository.pesquisaPorNomePJ(nome.trim().toUpperCase());
+
+		return new ResponseEntity(juridicas, HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@GetMapping(value = "**/consultaCnpj/{cnpj}")
+	public ResponseEntity<List<PessoaJuridica>> consultaCnpj(@PathVariable("cnpj") String cnpj) {
+
+		List<PessoaJuridica> juridicas = pessoaRepository.existeCnpjCadastradoList(cnpj);
+
+		return ResponseEntity.ok(juridicas);
+	}
 
 	@ResponseBody
 	@GetMapping(value = "**/consultaCep/{cep}")
@@ -111,5 +161,5 @@ public class PessoaController {
 
 		return ResponseEntity.ok(pessoaFisica);
 	}
-    
+
 }
