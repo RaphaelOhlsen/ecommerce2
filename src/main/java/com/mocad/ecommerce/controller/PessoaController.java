@@ -9,6 +9,7 @@ import com.mocad.ecommerce.repository.EnderecoRepository;
 import com.mocad.ecommerce.repository.PessoaFisicaRepository;
 import com.mocad.ecommerce.repository.PessoaRepository;
 import com.mocad.ecommerce.service.PessoaUserService;
+import com.mocad.ecommerce.service.ServiceContagemAcessoApi;
 import com.mocad.ecommerce.utils.ValidaCNPJ;
 import com.mocad.ecommerce.utils.ValidaCPF;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class PessoaController {
 	private PessoaFisicaRepository pessoaFisicaRepository;
 
 	@Autowired
+	ServiceContagemAcessoApi serviceContagemAcessoApi;
+
+	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@ResponseBody
@@ -44,7 +48,7 @@ public class PessoaController {
 
 		List<PessoaFisica> fisicas = pessoaFisicaRepository.pesquisaPorNomePF(nome.trim().toUpperCase());
 
-//		jdbcTemplate.execute("begin; update tabela_acesso_end_potin set qtd_acesso_end_point = qtd_acesso_end_point + 1 where nome_end_point = 'END-POINT-NOME-PESSOA-FISICA'; commit;");
+		serviceContagemAcessoApi.atualizaAcessoEndPointPF();
 
 		return ResponseEntity.ok(fisicas);
 	}
