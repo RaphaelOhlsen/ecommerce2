@@ -1,6 +1,7 @@
 package com.mocad.ecommerce.controller;
 
 import com.mocad.ecommerce.ExceptionEcommerce;
+import com.mocad.ecommerce.enums.TipoPessoa;
 import com.mocad.ecommerce.model.Endereco;
 import com.mocad.ecommerce.model.PessoaFisica;
 import com.mocad.ecommerce.model.PessoaJuridica;
@@ -92,9 +93,13 @@ public class PessoaController {
 	@PostMapping(value = "**/salvarPJ")
 	public ResponseEntity<PessoaJuridica> salvarPJ(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws ExceptionEcommerce {
 		if (pessoaJuridica == null) {
-			throw new ExceptionEcommerce("Pessoa Juridica não pode ser nula");
+			throw new ExceptionEcommerce("Pessoa Juridica não pode ser NULL");
 		}
-		
+
+		if (pessoaJuridica.getTipoPessoa() == null) {
+			throw new ExceptionEcommerce("Informe o tipo de pessoa: Juridica ou Fornecedor");
+		}
+
 		if (pessoaJuridica.getId() == null && pessoaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()) != null) {
 			throw new ExceptionEcommerce("CNPJ já cadastrado");
 		}
@@ -149,6 +154,10 @@ public class PessoaController {
 	public ResponseEntity<PessoaFisica> salvarPF(@RequestBody PessoaFisica pessoaFisica) throws ExceptionEcommerce {
 		if (pessoaFisica == null) {
 			throw new ExceptionEcommerce("Pessoa Física não pode ser nula");
+		}
+
+		if (pessoaFisica.getTipoPessoa() == null) {
+			pessoaFisica.setTipoPessoa(TipoPessoa.FISICA.name());
 		}
 
 		if (!ValidaCPF.isCPF(pessoaFisica.getCpf())) {
