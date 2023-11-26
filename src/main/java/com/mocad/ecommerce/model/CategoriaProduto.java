@@ -2,7 +2,7 @@ package com.mocad.ecommerce.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
+
 
 @Entity
 @Table(name = "categoria_produto")
@@ -21,7 +21,7 @@ public class CategoriaProduto implements Serializable {
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "empresa_id", nullable = false,
           foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-  private Pessoa empresa;
+  private PessoaJuridica empresa = new PessoaJuridica();
 
   public Long getId() {
     return id;
@@ -39,11 +39,11 @@ public class CategoriaProduto implements Serializable {
     this.nomeDesc = nomeDesc;
   }
 
-  public Pessoa getEmpresa() {
+  public PessoaJuridica getEmpresa() {
     return empresa;
   }
 
-  public void setEmpresa(Pessoa empresa) {
+  public void setEmpresa(PessoaJuridica empresa) {
     this.empresa = empresa;
   }
 

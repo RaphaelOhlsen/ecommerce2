@@ -6,6 +6,7 @@ import com.mocad.ecommerce.model.Endereco;
 import com.mocad.ecommerce.model.PessoaFisica;
 import com.mocad.ecommerce.model.PessoaJuridica;
 import com.mocad.ecommerce.model.dto.CepDTO;
+import com.mocad.ecommerce.model.dto.CnpjDTO;
 import com.mocad.ecommerce.repository.EnderecoRepository;
 import com.mocad.ecommerce.repository.PessoaFisicaRepository;
 import com.mocad.ecommerce.repository.PessoaRepository;
@@ -86,6 +87,14 @@ public class PessoaController {
 	@GetMapping(value = "**/consultaCep/{cep}")
 	public ResponseEntity<CepDTO> consultaCep(@PathVariable("cep") String cep){
 		return ResponseEntity.ok(pessoaUserService.consultaCep(cep));
+	}
+
+	@ResponseBody
+	@GetMapping(value = "**/consultaCnpjReceita/{cnpj}")
+	public ResponseEntity<CnpjDTO> consultaCnpjReceita(@PathVariable("cnpj") String cnpj){
+
+		return new ResponseEntity<CnpjDTO>(pessoaUserService.consultaCnpj(cnpj), HttpStatus.OK);
+
 	}
 
 	@ResponseBody

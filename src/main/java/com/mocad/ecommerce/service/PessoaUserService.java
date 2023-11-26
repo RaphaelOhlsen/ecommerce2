@@ -4,6 +4,7 @@ import com.mocad.ecommerce.model.PessoaFisica;
 import com.mocad.ecommerce.model.PessoaJuridica;
 import com.mocad.ecommerce.model.Usuario;
 import com.mocad.ecommerce.model.dto.CepDTO;
+import com.mocad.ecommerce.model.dto.CnpjDTO;
 import com.mocad.ecommerce.repository.PessoaFisicaRepository;
 import com.mocad.ecommerce.repository.PessoaRepository;
 import com.mocad.ecommerce.repository.UsuarioRepository;
@@ -129,5 +130,7 @@ public class PessoaUserService {
         return new RestTemplate().getForEntity("https://viacep.com.br/ws/" + cep + "/json/", CepDTO.class).getBody();
     }
 
-
+    public CnpjDTO consultaCnpj(String cnpj) {
+        return new RestTemplate().getForEntity("https://receitaws.com.br/v1/cnpj/" + cnpj, CnpjDTO.class).getBody();
+    }
 }
