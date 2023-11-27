@@ -4,6 +4,8 @@ package com.mocad.ecommerce.model;
 import com.mocad.ecommerce.enums.StatusContaPagar;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -19,17 +21,23 @@ public class ContaPagar implements Serializable {
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_conta_pagar")
   private Long id;
 
+  @NotNull(message = "Descrição da conta é obrigatória")
   @Column(nullable = false)
   private String descricao;
 
+
+  @NotNull(message = "Valor total da conta é obrigatório")
   @Column(nullable = false)
   private BigDecimal valorTotal;
 
   private BigDecimal valorDesconto;
 
+
+  @NotNull(message = "Status da conta é obrigatório")
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private StatusContaPagar status;
+
 
   @Column(nullable = false)
   @Temporal(TemporalType.DATE)
@@ -38,20 +46,21 @@ public class ContaPagar implements Serializable {
   @Temporal(TemporalType.DATE)
   private Date dtPagamento;
 
+
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name= "pessoa_fk"))
-  private Pessoa pessoa;
+  private PessoaFisica pessoaFisica;
 
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "pessoa_forn_id", nullable = false, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name= "pessoa_forn_fk"))
-  private Pessoa pessoa_fornecedor;
+  private PessoaJuridica pessoaFornecedor;
 
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "empresa_id", nullable = false,
           foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-  private Pessoa empresa;
+  private PessoaJuridica empresa;
 
   public Long getId() {
     return id;
@@ -109,27 +118,27 @@ public class ContaPagar implements Serializable {
     this.dtPagamento = dtPagamento;
   }
 
-  public Pessoa getPessoa() {
-    return pessoa;
+  public PessoaFisica getPessoaFisica() {
+    return pessoaFisica;
   }
 
-  public void setPessoa(Pessoa pessoa) {
-    this.pessoa = pessoa;
+  public void setPessoaFisica(PessoaFisica pessoaFisica) {
+    this.pessoaFisica = pessoaFisica;
   }
 
-  public Pessoa getPessoa_fornecedor() {
-    return pessoa_fornecedor;
+  public PessoaJuridica getPessoaFornecedor() {
+    return pessoaFornecedor;
   }
 
-  public void setPessoa_fornecedor(Pessoa pessoa_fornecedor) {
-    this.pessoa_fornecedor = pessoa_fornecedor;
+  public void setPessoaFornecedor(PessoaJuridica pessoaFornecedor) {
+    this.pessoaFornecedor = pessoaFornecedor;
   }
 
-  public Pessoa getEmpresa() {
+  public PessoaJuridica getEmpresa() {
     return empresa;
   }
 
-  public void setEmpresa(Pessoa empresa) {
+  public void setEmpresa(PessoaJuridica empresa) {
     this.empresa = empresa;
   }
 
