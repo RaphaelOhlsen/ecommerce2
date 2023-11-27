@@ -65,6 +65,14 @@ public class NotaFiscalCompraController {
                 }
             }
 
+            List<NotaFiscalCompra> notas = notaFiscalCompraRepository.buscaNotaPorNumero(notaFiscalCompra.getNumeroNota(), notaFiscalCompra.getEmpresa().getId());
+
+            if (!notas.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).
+                        body("Já existe uma nota fiscal de compra com esse número");
+            }
+
+
         }
 
         if (notaFiscalCompra.getPessoa() == null || notaFiscalCompra.getPessoa().getId() <= 0) {
