@@ -65,6 +65,12 @@ public class CategoriaProdutoController {
     @DeleteMapping(value = "**/deleteCategoria/{id}")
     public ResponseEntity<?> deleteCategoria(@PathVariable("id") Long id) {
 
+        boolean categoriaProduto = categoriaProdutoRepository.findById(id).isPresent();
+
+        if (!categoriaProduto) {
+            return ResponseEntity.badRequest().body("Categoria não encontrada");
+        }
+
         categoriaProdutoRepository.deleteById(id);
 
         return ResponseEntity.ok("Categoria Removida");

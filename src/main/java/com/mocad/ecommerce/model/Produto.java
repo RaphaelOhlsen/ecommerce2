@@ -1,6 +1,8 @@
 package com.mocad.ecommerce.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -17,30 +19,40 @@ public class Produto implements Serializable {
   @Column(nullable = false)
   private String tipoUnidade;
 
+  @Size(min = 10, message = "O nome do produto deve ter no mínimo 10 caracteres")
+  @NotNull(message = "O nome do produto é obrigatório")
   @Column(nullable = false)
   private String nome;
 
+  @NotNull(message = "O campo ativo é obrigatório")
   @Column(nullable = false)
   private Boolean ativo = Boolean.TRUE;
 
+  @NotNull(message = "A descrição do produto é obrigatório")
   @Column(columnDefinition = "text", length = 2000, nullable = false)
   private String descricao;
 
+  @NotNull(message = "O peso do produto é obrigatório")
   @Column(nullable = false)
   private Double peso;
 
+  @NotNull(message = "A largura do produto é obrigatório")
   @Column(nullable = false)
   private Double largura;
 
+  @NotNull(message = "A altura do produto é obrigatório")
   @Column(nullable = false)
   private Double altura;
 
+  @NotNull(message = "A profundidade do produto é obrigatório")
   @Column(nullable = false)
   private Double profundidade;
 
+  @NotNull(message = "O valor de venda do produto é obrigatório")
   @Column(nullable = false)
   private BigDecimal valorVenda = BigDecimal.ZERO;
 
+  @NotNull(message = "A quantidade em estoque do produto é obrigatório")
   @Column(nullable = false)
   private Integer qtdEstoque = 0;
 
@@ -52,9 +64,20 @@ public class Produto implements Serializable {
 
   private Integer qtdClique = 0;
 
+  @NotNull(message = "A empresa é obrigatório")
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-  private Pessoa empresa;
+  private PessoaJuridica empresa;
+
+  @NotNull(message = "A categoria do produto é obrigatório")
+  @ManyToOne(targetEntity = CategoriaProduto.class)
+  @JoinColumn(name = "categoria_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "categoria_produto_id_fk"))
+  private CategoriaProduto categoriaProduto;
+
+  @NotNull(message = "A marca do produto é obrigatório")
+  @ManyToOne(targetEntity = MarcaProduto.class)
+  @JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
+  private MarcaProduto marcaProduto;
 
   public Long getId() {
     return id;
@@ -176,12 +199,28 @@ public class Produto implements Serializable {
     this.qtdClique = qtdClique;
   }
 
-  public Pessoa getEmpresa() {
+  public PessoaJuridica getEmpresa() {
     return empresa;
   }
 
-  public void setEmpresa(Pessoa empresa) {
+  public void setEmpresa(PessoaJuridica empresa) {
     this.empresa = empresa;
+  }
+
+  public CategoriaProduto getCategoriaProduto() {
+    return categoriaProduto;
+  }
+
+  public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
+    this.categoriaProduto = categoriaProduto;
+  }
+
+  public MarcaProduto getMarcaProduto() {
+    return marcaProduto;
+  }
+
+  public void setMarcaProduto(MarcaProduto marcaProduto) {
+    this.marcaProduto = marcaProduto;
   }
 
   @Override
