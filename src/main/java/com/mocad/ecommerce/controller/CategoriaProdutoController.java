@@ -24,6 +24,9 @@ public class CategoriaProdutoController {
     @GetMapping(value = "**/buscarPorDescCategoria")
     public ResponseEntity<List<CategoriaProduto>> buscarPorDesc( @RequestParam("desc") String desc,
                                                                  @RequestParam("idEmpresa") Long idEmpresa) throws ExceptionEcommerce {
+        if(desc == null) {
+            throw new ExceptionEcommerce("Descrição da categoria não informada");
+        }
 
         if (idEmpresa == null || idEmpresa <= 0) {
             throw new ExceptionEcommerce("Empresa não informada");

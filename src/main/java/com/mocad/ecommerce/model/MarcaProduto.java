@@ -1,6 +1,8 @@
 package com.mocad.ecommerce.model;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -15,14 +17,15 @@ public class MarcaProduto implements Serializable {
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_marca_produto")
   private Long id;
 
-
+  @NotNull(message = "Nome da marca é obrigatório")
   @Column(nullable = false)
   private String nomeDesc;
 
+  @NotNull(message = "Empresa é obrigatório")
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "empresa_id", nullable = false,
           foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-  private Pessoa empresa;
+  private PessoaJuridica empresa;
 
   public Long getId() {
     return id;
@@ -40,11 +43,11 @@ public class MarcaProduto implements Serializable {
     this.nomeDesc = nomeDesc;
   }
 
-  public Pessoa getEmpresa() {
+  public PessoaJuridica getEmpresa() {
     return empresa;
   }
 
-  public void setEmpresa(Pessoa empresa) {
+  public void setEmpresa(PessoaJuridica empresa) {
     this.empresa = empresa;
   }
 

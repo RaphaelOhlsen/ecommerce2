@@ -82,12 +82,12 @@ public class ProdutoController {
     }
 
     @ResponseBody
-    @GetMapping(value = "**/buscarPorNomeProduto/{desc}") /*Mapeando a url para receber JSON*/
-    public ResponseEntity<List<Produto>> buscarPorNome(@RequestParam("desc") String desc,
+    @GetMapping(value = "**/buscarPorNomeProduto") /*Mapeando a url para receber JSON*/
+    public ResponseEntity<List<Produto>> buscarPorNome(@RequestParam("nome") String nome,
                                                        @RequestParam("idEmpresa") Long idEmpresa) {
 
-        List<Produto> produtos = produtoRepository.buscarProdutoNome(desc.toUpperCase().trim(), idEmpresa);
+        List<Produto> produtos = produtoRepository.buscarProdutoNome(nome.toUpperCase().trim(), idEmpresa);
 
-        return new ResponseEntity<List<Produto>>(produtos, HttpStatus.OK);
+        return new ResponseEntity<>(produtos, HttpStatus.OK);
     }
 }
