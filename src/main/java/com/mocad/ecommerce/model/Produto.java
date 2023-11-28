@@ -64,17 +64,17 @@ public class Produto implements Serializable {
 
   private Integer qtdClique = 0;
 
-  @NotNull(message = "A empresa é obrigatório")
+
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
   private PessoaJuridica empresa;
 
-  @NotNull(message = "A categoria do produto é obrigatório")
+
   @ManyToOne(targetEntity = CategoriaProduto.class)
   @JoinColumn(name = "categoria_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "categoria_produto_id_fk"))
   private CategoriaProduto categoriaProduto;
 
-  @NotNull(message = "A marca do produto é obrigatório")
+
   @ManyToOne(targetEntity = MarcaProduto.class)
   @JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
   private MarcaProduto marcaProduto;

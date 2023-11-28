@@ -1,6 +1,9 @@
 package com.mocad.ecommerce.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -12,6 +15,8 @@ public class NotaItemProduto implements Serializable {
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_nota_item_produto")
   private Long id;
 
+  @DecimalMin(value = "1", message = "Quantidade deve ser maior que zero")
+  @NotNull(message = "Quantidade deve ser informada")
   @Column(nullable = false)
   private Double quantidade;
 
@@ -28,7 +33,7 @@ public class NotaItemProduto implements Serializable {
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "empresa_id", nullable = false,
           foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-  private Pessoa empresa;
+  private PessoaJuridica empresa;
 
   public Long getId() {
     return id;
@@ -62,11 +67,11 @@ public class NotaItemProduto implements Serializable {
     this.notaFiscalCompra = notaFiscalCompra;
   }
 
-  public Pessoa getEmpresa() {
+  public PessoaJuridica getEmpresa() {
     return empresa;
   }
 
-  public void setEmpresa(Pessoa empresa) {
+  public void setEmpresa(PessoaJuridica empresa) {
     this.empresa = empresa;
   }
 
