@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "produto")
@@ -16,6 +17,7 @@ public class Produto implements Serializable {
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_produto")
   private Long id;
 
+  @NotNull(message = "O tipo de unidade é obrigatório")
   @Column(nullable = false)
   private String tipoUnidade;
 
@@ -78,6 +80,9 @@ public class Produto implements Serializable {
   @ManyToOne(targetEntity = MarcaProduto.class)
   @JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
   private MarcaProduto marcaProduto;
+
+  @OneToMany(mappedBy = "produto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<ImagemProduto> imagens;
 
   public Long getId() {
     return id;
@@ -221,6 +226,14 @@ public class Produto implements Serializable {
 
   public void setMarcaProduto(MarcaProduto marcaProduto) {
     this.marcaProduto = marcaProduto;
+  }
+
+  public List<ImagemProduto> getImagens() {
+    return imagens;
+  }
+
+  public void setImagens(List<ImagemProduto> imagens) {
+    this.imagens = imagens;
   }
 
   @Override

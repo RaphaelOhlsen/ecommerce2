@@ -3,15 +3,25 @@ package com.mocad.ecommerce.controller;
 import com.mocad.ecommerce.ExceptionEcommerce;
 import com.mocad.ecommerce.model.Produto;
 import com.mocad.ecommerce.repository.ProdutoRepository;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
+import com.mocad.ecommerce.service.ServiceSendEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import javax.xml.bind.DatatypeConverter;
 
 @Controller
 @RestController
@@ -20,34 +30,107 @@ public class ProdutoController {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired
+    private ServiceSendEmail serviceSendEmail;
+
     @ResponseBody /*Poder dar um retorno da API*/
     @PostMapping(value = "**/salvarProduto") /*Mapeando a url para receber JSON*/
-    public ResponseEntity<Produto> salvarProduto(@RequestBody @Valid Produto produto) throws ExceptionEcommerce { /*Recebe o JSON e converte pra Objeto*/
+    public ResponseEntity<Produto> salvarProduto(@RequestBody @Valid Produto produto) throws ExceptionEcommerce, MessagingException, IOException { /*Recebe o JSON e converte pra Objeto*/
 
-        if (produto.getEmpresa().getId() == null || produto.getEmpresa().getId() <= 0) {
+        if (produto.getTipoUnidade() == null || produto.getTipoUnidade().trim().isEmpty()) {
+            throw new ExceptionEcommerce("Tipo de Unidade não informada");
+        }
+
+        if (produto.getEmpresa() == null || produto.getEmpresa().getId() <= 0) {
             throw new ExceptionEcommerce("Empresa não informada");
         }
 
+        if (produto.getCategoriaProduto()  == null || produto.getCategoriaProduto().getId() <= 0) {
+            throw new ExceptionEcommerce("Categoria não informada");
+        }
+
+        if (produto.getMarcaProduto() == null || produto.getMarcaProduto().getId() <= 0) {
+            throw new ExceptionEcommerce("Marca não informada");
+        }
+
+        if (produto.getImagens() == null || produto.getImagens().isEmpty() || produto.getImagens().size() == 0) {
+            throw new ExceptionEcommerce("Imagem não informada");
+        }
+
+        if (produto.getImagens().size() < 3 || produto.getImagens().size() > 6) {
+            throw new ExceptionEcommerce("Quantidade de imagens deve ser entre 3 e 6");
+        }
+
         if (produto.getId() == null) {
+
             List<Produto> produtos = produtoRepository.buscarProdutoNome(produto.getNome().toUpperCase(), produto.getEmpresa().getId());
 
             if (!produtos.isEmpty()) {
                 throw new ExceptionEcommerce("Já existe Produto com este nome: " + produto.getNome());
             }
-        }
 
-        if (produto.getCategoriaProduto().getId()  == null || produto.getCategoriaProduto().getId() <= 0) {
-            throw new ExceptionEcommerce("Categoria não informada");
-        }
+            for (int x = 0; x < produto.getImagens().size(); x++) {
+                produto.getImagens().get(x).setProduto(produto);
+                produto.getImagens().get(x).setEmpresa(produto.getEmpresa());
 
-        if (produto.getMarcaProduto().getId() == null || produto.getMarcaProduto().getId() <= 0) {
-            throw new ExceptionEcommerce("Marca não informada");
-        }
+                String base64Image = "";
 
+                if (produto.getImagens().get(x).getImagemOriginal().contains("data:image")) {
+                    base64Image = produto.getImagens().get(x).getImagemOriginal().split(",")[1];
+                }else {
+                    base64Image = produto.getImagens().get(x).getImagemOriginal();
+                }
+
+                byte[] imageBytes =  DatatypeConverter.parseBase64Binary(base64Image);
+
+                BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(imageBytes));
+
+                if (bufferedImage != null) {
+
+                    int type = bufferedImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : bufferedImage.getType();
+                    int largura = Integer.parseInt("800");
+                    int altura = Integer.parseInt("600");
+
+                    BufferedImage resizedImage = new BufferedImage(largura, altura, type);
+                    Graphics2D g = resizedImage.createGraphics();
+                    g.drawImage(bufferedImage, 0, 0, largura, altura, null);
+                    g.dispose();
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ImageIO.write(resizedImage, "png", baos);
+
+                    String miniImgBase64 = "data:image/png;base64," + DatatypeConverter.printBase64Binary(baos.toByteArray());
+
+                    produto.getImagens().get(x).setImagemMiniatura(miniImgBase64);
+
+                    bufferedImage.flush();
+                    resizedImage.flush();
+                    baos.flush();
+                    baos.close();
+
+                }
+            }
+        }
 
         Produto produtoSalvo = produtoRepository.save(produto);
 
-        return new ResponseEntity(produtoSalvo, HttpStatus.OK);
+        if (produto.getAlertaQtdEstoque() && produto.getQtdEstoque() <= 1) {
+            StringBuilder html = new StringBuilder();
+            html.append("<h2>").append("Produto: ").append(produto.getNome())
+                    .append(" com estoque baixo: " + produto.getQtdEstoque())
+                    .append("</h2><br>");
+            html.append("<p> Id Prod.:").append(produto.getId()).append("</p>");
+
+            if (produto.getEmpresa().getEmail() != null && !produto.getEmpresa().getEmail().isEmpty()) {
+                serviceSendEmail.enviarEmailHtml(
+                        "Produto com Estoque Baixo",
+                        html.toString(),
+                        produto.getEmpresa().getEmail().toString()
+                );
+            }
+        }
+
+        return new ResponseEntity<>(produtoSalvo, HttpStatus.OK);
     }
 
     @ResponseBody /*Poder dar um retorno da API*/
