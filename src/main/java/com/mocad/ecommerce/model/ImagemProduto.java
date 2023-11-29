@@ -1,8 +1,10 @@
 package com.mocad.ecommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -16,19 +18,21 @@ public class ImagemProduto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_imagem_produto")
 	private Long id;
 
+	@NotNull(message = "O campo imagemOriginal é obrigatório")
 	@Column(columnDefinition = "text", nullable = false)
 	private String imagemOriginal;
 
 	@Column(columnDefinition = "text", nullable = false)
 	private String imagemMiniatura;
 
-	@JsonIgnore
+	@JsonIgnoreProperties(allowGetters = true)
+//	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "produto_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
 	private Produto produto;
 
-	@JsonIgnore
+	@JsonIgnoreProperties(allowGetters = true)
 	@ManyToOne(targetEntity = Pessoa.class)
 	@JoinColumn(name = "empresa_id", nullable = false,
 			foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
