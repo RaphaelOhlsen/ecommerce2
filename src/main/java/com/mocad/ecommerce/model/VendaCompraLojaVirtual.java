@@ -1,6 +1,13 @@
 package com.mocad.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,47 +23,58 @@ public class VendaCompraLojaVirtual implements Serializable {
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_vd_cp_loja_virt")
   private Long id;
 
+  @DecimalMin(value = "1", inclusive = false, message = "O valor total deve ser maior que 1")
   @Column(nullable = false)
   private BigDecimal valorTotal;
 
   private BigDecimal valorDesconto;
 
+  @DecimalMin(value = "1", inclusive = false, message = "O valor do frete deve ser maior que 1")
   @Column(nullable = false)
   private BigDecimal valorFrete;
 
+  @Min(value = 1, message = "O valor de dias de entrega deve ser maior que 1")
   @Column(nullable = false)
-  private int dias_entrega;
+  private int diasEntrega;
 
+  @NotNull(message = "O campo data de venda é obrigatório")
   @Column(nullable = false)
   @Temporal(TemporalType.DATE)
   private Date dataVenda;
 
+  @NotNull(message = "O campo data de entrega é obrigatório")
   @Column(nullable = false)
   @Temporal(TemporalType.DATE)
   private Date dataEntrega;
 
-  @ManyToOne(targetEntity = Pessoa.class)
+  @NotNull(message = "O campo pessoa é obrigatório")
+  @ManyToOne(targetEntity = PessoaFisica.class, cascade = CascadeType.ALL)
   @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name= "pessoa_fk"))
-  private Pessoa pessoa;
+  private PessoaFisica pessoa;
 
+  @NotNull(message = "O campo empresa é obrigatório")
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "empresa_id", nullable = false,
           foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-  private Pessoa empresa;
+  private PessoaJuridica empresa;
 
-  @ManyToOne
+  @NotNull(message = "O campo endereço de entrega é obrigatório")
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "endereco_entrega_id", nullable = false, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name = "endereco_entrega_fk"))
   private Endereco enderecoEntrega;
 
-  @ManyToOne
+  @NotNull(message = "O campo endereço de cobrança é obrigatório")
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "endereco_cobranca_id", nullable = false, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name = "endereco_cobranca_fk"))
   private Endereco enderecoCobranca;
 
-  @OneToOne
-  @JoinColumn(name = "nota_fiscal_venda_id", nullable = false, foreignKey = @ForeignKey(
+  @JsonIgnoreProperties(allowGetters = true)
+  @NotNull(message = "O campo nota fiscal é obrigatório")
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "nota_fiscal_venda_id", nullable = true, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name = "nota_fiscal_venda_fk"))
   private NotaFiscalVenda notaFiscalVenda;
 
@@ -65,10 +83,12 @@ public class VendaCompraLojaVirtual implements Serializable {
           value = ConstraintMode.CONSTRAINT, name = "cup_desc_fk"))
   private CupDesc cupDesc;
 
+
+  @NotNull(message = "O campo forma de pagamento é obrigatório")
   @ManyToOne
   @JoinColumn(name = "forma_pagamento_id", nullable = false, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name = "forma_pagamento_fk"))
-  private FormaPagamento formapagamento;
+  private FormaPagamento formaPagamento;
 
   public Long getId() {
     return id;
@@ -102,12 +122,12 @@ public class VendaCompraLojaVirtual implements Serializable {
     this.valorFrete = valorFrete;
   }
 
-  public int getDias_entrega() {
-    return dias_entrega;
+  public int getDiasEntrega() {
+    return diasEntrega;
   }
 
-  public void setDias_entrega(int dias_entrega) {
-    this.dias_entrega = dias_entrega;
+  public void setDiasEntrega(int diasEntrega) {
+    this.diasEntrega = diasEntrega;
   }
 
   public Date getDataVenda() {
@@ -126,19 +146,19 @@ public class VendaCompraLojaVirtual implements Serializable {
     this.dataEntrega = dataEntrega;
   }
 
-  public Pessoa getPessoa() {
+  public PessoaFisica getPessoa() {
     return pessoa;
   }
 
-  public void setPessoa(Pessoa pessoa) {
+  public void setPessoa(PessoaFisica pessoa) {
     this.pessoa = pessoa;
   }
 
-  public Pessoa getEmpresa() {
+  public PessoaJuridica getEmpresa() {
     return empresa;
   }
 
-  public void setEmpresa(Pessoa empresa) {
+  public void setEmpresa(PessoaJuridica empresa) {
     this.empresa = empresa;
   }
 
@@ -174,12 +194,12 @@ public class VendaCompraLojaVirtual implements Serializable {
     this.cupDesc = cupDesc;
   }
 
-  public FormaPagamento getFormapagamento() {
-    return formapagamento;
+  public FormaPagamento getFormaPagamento() {
+    return formaPagamento;
   }
 
-  public void setFormapagamento(FormaPagamento formapagamento) {
-    this.formapagamento = formapagamento;
+  public void setFormaPagamento(FormaPagamento formapagamento) {
+    this.formaPagamento = formapagamento;
   }
 
   @Override

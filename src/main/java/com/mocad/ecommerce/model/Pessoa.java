@@ -21,10 +21,12 @@ public abstract class Pessoa implements Serializable {
   @NotNull(message = "Nome deve ser informado")
   @Column(nullable = false)
   private String nome;
+
   @Email(message = "Email inválido")
   @Column(nullable = false, unique = true)
   private String email;
 
+  @NotBlank(message = "Telefone deve ser informado")
   @Column(nullable = false)
   private String telefone;
   
@@ -35,7 +37,7 @@ public abstract class Pessoa implements Serializable {
   private List<Endereco> enderecos = new ArrayList<Endereco>();
 
   @ManyToOne(targetEntity = Pessoa.class)
-  @JoinColumn(name = "empresa_id", nullable = true,
+  @JoinColumn(name = "empresa_id",
           foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
   private Pessoa empresa;
 

@@ -31,14 +31,14 @@ public class NotaFiscalVenda implements Serializable {
   private String pdf;
 
   @OneToOne
-  @JoinColumn(name = "vd_cp_loja_virt_id", nullable = false, foreignKey = @ForeignKey(
+  @JoinColumn(name = "vd_cp_loja_virt_id", nullable = true, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name = "vd_cp_loja_virt_fk"))
   private VendaCompraLojaVirtual vendaCompraLojaVirtual;
 
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "empresa_id", nullable = false,
           foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-  private Pessoa empresa;
+  private PessoaJuridica empresa;
 
   public Long getId() {
     return id;
@@ -96,11 +96,11 @@ public class NotaFiscalVenda implements Serializable {
     this.vendaCompraLojaVirtual = vendaCompraLojaVirtual;
   }
 
-  public Pessoa getEmpresa() {
+  public PessoaJuridica getEmpresa() {
     return empresa;
   }
 
-  public void setEmpresa(Pessoa empresa) {
+  public void setEmpresa(PessoaJuridica empresa) {
     this.empresa = empresa;
   }
 
