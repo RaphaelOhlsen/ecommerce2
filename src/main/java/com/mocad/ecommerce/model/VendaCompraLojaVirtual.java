@@ -10,7 +10,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "vd_cp_loja_virt")
@@ -89,6 +91,9 @@ public class VendaCompraLojaVirtual implements Serializable {
   @JoinColumn(name = "forma_pagamento_id", nullable = false, foreignKey = @ForeignKey(
           value = ConstraintMode.CONSTRAINT, name = "forma_pagamento_fk"))
   private FormaPagamento formaPagamento;
+
+  @OneToMany(mappedBy = "vendaCompraLojaVirtual", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  private List<ItemVendaLoja> itemVendaLojas = new ArrayList<ItemVendaLoja>();
 
   public Long getId() {
     return id;
@@ -200,6 +205,14 @@ public class VendaCompraLojaVirtual implements Serializable {
 
   public void setFormaPagamento(FormaPagamento formapagamento) {
     this.formaPagamento = formapagamento;
+  }
+
+  public List<ItemVendaLoja> getItemVendaLojas() {
+    return itemVendaLojas;
+  }
+
+  public void setItemVendaLojas(List<ItemVendaLoja> itemVendaLojas) {
+    this.itemVendaLojas = itemVendaLojas;
   }
 
   @Override

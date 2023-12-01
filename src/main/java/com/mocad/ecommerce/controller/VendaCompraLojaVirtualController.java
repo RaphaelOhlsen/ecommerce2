@@ -2,8 +2,10 @@ package com.mocad.ecommerce.controller;
 
 import com.mocad.ecommerce.ExceptionEcommerce;
 import com.mocad.ecommerce.model.Endereco;
+import com.mocad.ecommerce.model.ItemVendaLoja;
 import com.mocad.ecommerce.model.PessoaFisica;
 import com.mocad.ecommerce.model.VendaCompraLojaVirtual;
+import com.mocad.ecommerce.model.dto.ItemVendaDTO;
 import com.mocad.ecommerce.model.dto.VendaCompraLojaVirtualDTO;
 import com.mocad.ecommerce.repository.EnderecoRepository;
 import com.mocad.ecommerce.repository.NotaFiscalVendaRepository;
@@ -11,9 +13,7 @@ import com.mocad.ecommerce.repository.PessoaFisicaRepository;
 import com.mocad.ecommerce.repository.VendaCompraLojaVirtualRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -76,6 +76,12 @@ public class VendaCompraLojaVirtualController {
 
         vendaCompraLojaVirtual.getNotaFiscalVenda().setEmpresa(vendaCompraLojaVirtual.getEmpresa());
 
+        for (int i = 0; i < vendaCompraLojaVirtual.getItemVendaLojas().size(); i++) {
+            vendaCompraLojaVirtual.getItemVendaLojas().get(i).setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+            vendaCompraLojaVirtual.getItemVendaLojas().get(i).setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+        }
+
+
         /* Salva primeiro a venda e todos os dados */
         vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.save(vendaCompraLojaVirtual);
 
@@ -87,7 +93,55 @@ public class VendaCompraLojaVirtualController {
         notaFiscalVendaRepository.saveAndFlush(vendaCompraLojaVirtual.getNotaFiscalVenda());
 
         VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
+
         vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
+        vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoa());
+        vendaCompraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
+        vendaCompraLojaVirtualDTO.setEnderecoCobranca(vendaCompraLojaVirtual.getEnderecoCobranca());
+        vendaCompraLojaVirtualDTO.setEnderecoEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
+        vendaCompraLojaVirtualDTO.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
+        vendaCompraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());
+
+        for (ItemVendaLoja item: vendaCompraLojaVirtual.getItemVendaLojas()) {
+
+            ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
+            itemVendaDTO.setId(item.getId());
+            itemVendaDTO.setProduto(item.getProduto());
+            itemVendaDTO.setQuantidade(item.getQuantidade());
+
+            vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+        }
+
+        return ResponseEntity.ok(vendaCompraLojaVirtualDTO);
+    }
+
+    @GetMapping("/consultaVenda/{id}")
+    public ResponseEntity<VendaCompraLojaVirtualDTO> consultaVenda(@PathVariable("id") Long idVenda) throws ExceptionEcommerce {
+
+        vendaCompraLojaVirtualRepository.findById(idVenda).
+                orElseThrow(() -> new ExceptionEcommerce("Venda não encontrada"));
+
+        VendaCompraLojaVirtual vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.findById(idVenda).get();
+
+        VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
+
+        vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
+        vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoa());
+        vendaCompraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
+        vendaCompraLojaVirtualDTO.setEnderecoCobranca(vendaCompraLojaVirtual.getEnderecoCobranca());
+        vendaCompraLojaVirtualDTO.setEnderecoEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
+        vendaCompraLojaVirtualDTO.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
+        vendaCompraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());
+
+        for (ItemVendaLoja item: vendaCompraLojaVirtual.getItemVendaLojas()) {
+
+            ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
+            itemVendaDTO.setId(item.getId());
+            itemVendaDTO.setProduto(item.getProduto());
+            itemVendaDTO.setQuantidade(item.getQuantidade());
+
+            vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+        }
 
         return ResponseEntity.ok(vendaCompraLojaVirtualDTO);
     }
