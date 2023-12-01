@@ -29,4 +29,22 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
             "WHERE i.produto.id = :idProduto AND i.empresa.id = :idEmpresa")
     List<VendaCompraLojaVirtual> vendaPorProduto(Long idProduto, Long idEmpresa);
 
+
+    @Query(value="select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
+            + " where i.vendaCompraLojaVirtual.excluido = false and upper(trim(i.produto.nome)) like %?1% and i.empresa.id = ?2")
+    List<VendaCompraLojaVirtual> vendaPorNomeProduto(String valor, Long idEmpresa);
+
+    // selecionar na tabela venda_compra_loja_virtual, onde o nome do cliente seja igual ao valor passado por parametro
+    @Query(value="select distinct(v) from VendaCompraLojaVirtual v "
+            + " where v.excluido = false and upper(trim(v.pessoa.nome)) like %?1% and v.empresa.id = ?2")
+    List<VendaCompraLojaVirtual> vendaPorNomeCliente(String valor, Long idEmpresa);
+
+    //selecionar da tabela venda_compra_loja_virtual todos os registros onde o endereco de cobranca seja igual ao valor passado por parametro
+    @Query(value="select distinct(v) from VendaCompraLojaVirtual v "
+                + " where v.excluido = false and upper(trim(v.enderecoEntrega.ruaLogra)) like %?1% and v.empresa.id = ?2")
+//    @Query(value="select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
+//            + " where i.vendaCompraLojaVirtual.excluido = false and upper(trim(i.vendaCompraLojaVirtual.enderecoCobranca.ruaLogra)) "
+//            + " like %?1%")
+    List<VendaCompraLojaVirtual> vendaPorEnderecoCobranca(String valor, Long idEmpresa);
+
 }
