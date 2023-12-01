@@ -1,16 +1,11 @@
 package com.mocad.ecommerce.controller;
 
 import com.mocad.ecommerce.ExceptionEcommerce;
-import com.mocad.ecommerce.model.Endereco;
-import com.mocad.ecommerce.model.ItemVendaLoja;
-import com.mocad.ecommerce.model.PessoaFisica;
-import com.mocad.ecommerce.model.VendaCompraLojaVirtual;
+import com.mocad.ecommerce.model.*;
 import com.mocad.ecommerce.model.dto.ItemVendaDTO;
 import com.mocad.ecommerce.model.dto.VendaCompraLojaVirtualDTO;
-import com.mocad.ecommerce.repository.EnderecoRepository;
-import com.mocad.ecommerce.repository.NotaFiscalVendaRepository;
-import com.mocad.ecommerce.repository.PessoaFisicaRepository;
-import com.mocad.ecommerce.repository.VendaCompraLojaVirtualRepository;
+import com.mocad.ecommerce.repository.*;
+import com.mocad.ecommerce.service.VendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +26,12 @@ public class VendaCompraLojaVirtualController {
 
     @Autowired
     private NotaFiscalVendaRepository notaFiscalVendaRepository;
+
+    @Autowired
+    private StatusRastreioRepository statusRastreioRepository;
+
+    @Autowired
+    private VendaService vendaService;
 
     @PostMapping("/salvarVendaLoja")
     public ResponseEntity<VendaCompraLojaVirtualDTO> salvarVenda(@RequestBody @Valid VendaCompraLojaVirtual vendaCompraLojaVirtual) throws ExceptionEcommerce {
@@ -84,6 +85,18 @@ public class VendaCompraLojaVirtualController {
 
         /* Salva primeiro a venda e todos os dados */
         vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.save(vendaCompraLojaVirtual);
+
+        /* Salva o status de rastreio */
+        StatusRastreio statusRastreio = new StatusRastreio();
+        statusRastreio.setCentroDistribuicao("Serra");
+        statusRastreio.setCidade("Serra");
+        statusRastreio.setEstado("ES");
+        statusRastreio.setStatus("Em separação");
+        statusRastreio.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+        statusRastreio.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+        statusRastreioRepository.save(statusRastreio);
+
+
 
         /* Associa a venda gravada no banco com a nota fiscal */
         vendaCompraLojaVirtual.getNotaFiscalVenda().setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
@@ -144,5 +157,16 @@ public class VendaCompraLojaVirtualController {
         }
 
         return ResponseEntity.ok(vendaCompraLojaVirtualDTO);
+    }
+
+    @DeleteMapping("/deleteVendaTotalBanco/{id}")
+    public ResponseEntity<String> deleteVendaTotalBanco(@PathVariable("id") Long idVenda) throws ExceptionEcommerce {
+
+        vendaCompraLojaVirtualRepository.findById(idVenda).
+                orElseThrow(() -> new ExceptionEcommerce("Venda não encontrada"));
+
+        vendaService.exclusaoTotalVendaBanco(idVenda);
+
+        return ResponseEntity.ok("Venda excluída com sucesso");
     }
 }

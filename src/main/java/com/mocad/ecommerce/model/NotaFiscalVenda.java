@@ -31,8 +31,8 @@ public class NotaFiscalVenda implements Serializable {
   private String pdf;
 
   @OneToOne
-  @JoinColumn(name = "vd_cp_loja_virt_id", nullable = true, foreignKey = @ForeignKey(
-          value = ConstraintMode.CONSTRAINT, name = "vd_cp_loja_virt_fk"))
+  @JoinColumn(name = "venda_compra_loja_virt_id", nullable = true,
+          foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_compra_loja_virt_fk"))
   private VendaCompraLojaVirtual vendaCompraLojaVirtual;
 
   @ManyToOne(targetEntity = Pessoa.class)
