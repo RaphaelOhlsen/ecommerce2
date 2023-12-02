@@ -11,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -273,9 +276,60 @@ public class VendaCompraLojaVirtualController {
 
             compraLojaVirtualDTOList.add(vendaCompraLojaVirtualDTO);
         }
-
-
-
         return ResponseEntity.ok(compraLojaVirtualDTOList);
     }
+
+    @GetMapping("/consultaVendaFaixaData/{data1}/{data2}/{idEmpresa}")
+    public ResponseEntity<List<VendaCompraLojaVirtualDTO>>
+                                                            consultaVendaFaixaData(
+                                                                   @PathVariable("data1") String data1,
+                                                                   @PathVariable("data2") String data2,
+                                                                   @PathVariable("idEmpresa") Long idEmpresa) throws ParseException {
+
+        List <VendaCompraLojaVirtual> vendaCompraLojaVirtual = null;
+
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date d1 = formato.parse(data1);
+
+        Date d2 = formato.parse(data2);
+
+
+        vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorFaixaData(d1, d2, idEmpresa);
+
+        if (vendaCompraLojaVirtual == null){
+            vendaCompraLojaVirtual = new ArrayList<>();
+        }
+
+        List<VendaCompraLojaVirtualDTO> compraLojaVirtualDTOList = new ArrayList<>();
+
+        for (VendaCompraLojaVirtual vcl : vendaCompraLojaVirtual) {
+            VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
+
+            vendaCompraLojaVirtualDTO.setValorTotal(vcl.getValorTotal());
+            vendaCompraLojaVirtualDTO.setPessoa(vcl.getPessoa());
+            vendaCompraLojaVirtualDTO.setId(vcl.getId());
+            vendaCompraLojaVirtualDTO.setEnderecoCobranca(vcl.getEnderecoCobranca());
+            vendaCompraLojaVirtualDTO.setEnderecoEntrega(vcl.getEnderecoEntrega());
+            vendaCompraLojaVirtualDTO.setValorDesconto(vcl.getValorDesconto());
+            vendaCompraLojaVirtualDTO.setValorFrete(vcl.getValorFrete());
+
+            for (ItemVendaLoja item: vcl.getItemVendaLojas()) {
+
+                ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
+                itemVendaDTO.setId(item.getId());
+                itemVendaDTO.setProduto(item.getProduto());
+                itemVendaDTO.setQuantidade(item.getQuantidade());
+
+                vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+            }
+
+            compraLojaVirtualDTOList.add(vendaCompraLojaVirtualDTO);
+        }
+
+        return ResponseEntity.ok(compraLojaVirtualDTOList);
+
+    }
+
+
 }
