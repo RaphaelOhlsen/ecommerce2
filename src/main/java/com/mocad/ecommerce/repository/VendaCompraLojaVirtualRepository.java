@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+
 
 @Repository
 public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCompraLojaVirtual, Long> {
@@ -59,7 +59,8 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
             + " where v.excluido = false and v.pessoa.cpf = ?1 and v.empresa.id = ?2")
     List<VendaCompraLojaVirtual> vendaPorCpfCliente(String cpf, Long idEmpresa);
 
-    @Query(value="select distinct(v) from VendaCompraLojaVirtual v "
-            + " where v.excluido = false and v.pessoa.id = ?1 and v.empresa.id = ?2")
+
+   @Query(value="select distinct(v) from VendaCompraLojaVirtual v "
+           + " where v.excluido = false and v.pessoa.id = ?1")
     List<VendaCompraLojaVirtual> vendaPorCliente(Long idCliente);
 }
