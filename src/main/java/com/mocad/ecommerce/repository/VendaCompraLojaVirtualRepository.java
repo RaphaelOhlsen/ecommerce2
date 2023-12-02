@@ -54,4 +54,12 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
                 + " where v.excluido = false and v.dataVenda between ?1 and ?2 and v.empresa.id = ?3")
     List<VendaCompraLojaVirtual> vendaPorFaixaData(Date dataInicial, Date dataFinal, Long idEmpresa);
 
+   // fazer cosnulta por cpf
+    @Query(value="select distinct(v) from VendaCompraLojaVirtual v "
+            + " where v.excluido = false and v.pessoa.cpf = ?1 and v.empresa.id = ?2")
+    List<VendaCompraLojaVirtual> vendaPorCpfCliente(String cpf, Long idEmpresa);
+
+    @Query(value="select distinct(v) from VendaCompraLojaVirtual v "
+            + " where v.excluido = false and v.pessoa.id = ?1 and v.empresa.id = ?2")
+    List<VendaCompraLojaVirtual> vendaPorCliente(Long idCliente);
 }

@@ -245,6 +245,8 @@ public class VendaCompraLojaVirtualController {
             vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorNomeCliente(valor.trim().toUpperCase(), idEmpresa);
         } else if (tipoConsulta.equalsIgnoreCase("POR_ENDERECO_COBRANCA")) {
             vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorEnderecoCobranca(valor.trim().toUpperCase(), idEmpresa);
+        } else if (tipoConsulta.equalsIgnoreCase("POR_CPF_CLIENTE")) {
+            vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorCpfCliente(valor, idEmpresa);
         }
 
         if (vendaCompraLojaVirtual == null){
