@@ -6,6 +6,7 @@ import com.mocad.ecommerce.model.dto.ItemVendaDTO;
 import com.mocad.ecommerce.model.dto.VendaCompraLojaVirtualDTO;
 import com.mocad.ecommerce.repository.*;
 import com.mocad.ecommerce.service.VendaService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,9 @@ public class VendaCompraLojaVirtualController {
 
     @Autowired
     private VendaService vendaService;
+
+    private final ModelMapper modelMapper = new ModelMapper();
+
 
     @PostMapping("/salvarVendaLoja")
     public ResponseEntity<VendaCompraLojaVirtualDTO> salvarVenda(@RequestBody @Valid VendaCompraLojaVirtual vendaCompraLojaVirtual) throws ExceptionEcommerce {
@@ -110,25 +114,35 @@ public class VendaCompraLojaVirtualController {
         /* Persiste novamente a nota fiscal novamente para ficar amarrada na venda*/
         notaFiscalVendaRepository.saveAndFlush(vendaCompraLojaVirtual.getNotaFiscalVenda());
 
-        VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
+        /* Usando ModelMapper para converter VendaCompraLojaVirtual para VendaCompraLojaVirtualDTO */
 
-        vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
-        vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoa());
-        vendaCompraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
-        vendaCompraLojaVirtualDTO.setEnderecoCobranca(vendaCompraLojaVirtual.getEnderecoCobranca());
-        vendaCompraLojaVirtualDTO.setEnderecoEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
-        vendaCompraLojaVirtualDTO.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
-        vendaCompraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());
+        VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = modelMapper.map(vendaCompraLojaVirtual, VendaCompraLojaVirtualDTO.class);
 
-        for (ItemVendaLoja item: vendaCompraLojaVirtual.getItemVendaLojas()) {
 
-            ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
-            itemVendaDTO.setId(item.getId());
-            itemVendaDTO.setProduto(item.getProduto());
-            itemVendaDTO.setQuantidade(item.getQuantidade());
 
-            vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
-        }
+        /* Usando Boiller Plate para converter VendaCompraLojaVirtual para VendaCompraLojaVirtualDTO */
+
+//        VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
+//        vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
+//        vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoa());
+//
+//        vendaCompraLojaVirtualDTO.setEnderecoCobranca(vendaCompraLojaVirtual.getEnderecoCobranca());
+//        vendaCompraLojaVirtualDTO.setEnderecoEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
+//
+//        vendaCompraLojaVirtualDTO.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
+//        vendaCompraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());
+//        vendaCompraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
+
+//        for (ItemVendaLoja item: vendaCompraLojaVirtual.getItemVendaLojas()) {
+//
+////            ItemVendaDTO itemVendaDTO = modelMapper.map(item, ItemVendaDTO.class);
+//            ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
+//            itemVendaDTO.setId(item.getId());
+//            itemVendaDTO.setProduto(item.getProduto());
+//            itemVendaDTO.setQuantidade(item.getQuantidade());
+//
+//            vendaCompraLojaVirtualDTO.getItemVendaLojas().add(itemVendaDTO);
+//        }
 
         return ResponseEntity.ok(vendaCompraLojaVirtualDTO);
     }
@@ -159,7 +173,7 @@ public class VendaCompraLojaVirtualController {
             itemVendaDTO.setProduto(item.getProduto());
             itemVendaDTO.setQuantidade(item.getQuantidade());
 
-            vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+            vendaCompraLojaVirtualDTO.getItemVendaLojas().add(itemVendaDTO);
         }
 
         return ResponseEntity.ok(vendaCompraLojaVirtualDTO);
@@ -219,7 +233,7 @@ public class VendaCompraLojaVirtualController {
                 itemVendaDTO.setProduto(item.getProduto());
                 itemVendaDTO.setQuantidade(item.getQuantidade());
 
-                vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+                vendaCompraLojaVirtualDTO.getItemVendaLojas().add(itemVendaDTO);
             }
 
             compraLojaVirtualDTOList.add(vendaCompraLojaVirtualDTO);
@@ -275,7 +289,7 @@ public class VendaCompraLojaVirtualController {
                 itemVendaDTO.setProduto(item.getProduto());
                 itemVendaDTO.setQuantidade(item.getQuantidade());
 
-                vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+                vendaCompraLojaVirtualDTO.getItemVendaLojas().add(itemVendaDTO);
             }
 
             compraLojaVirtualDTOList.add(vendaCompraLojaVirtualDTO);
@@ -325,7 +339,7 @@ public class VendaCompraLojaVirtualController {
                 itemVendaDTO.setProduto(item.getProduto());
                 itemVendaDTO.setQuantidade(item.getQuantidade());
 
-                vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+                vendaCompraLojaVirtualDTO.getItemVendaLojas().add(itemVendaDTO);
             }
 
             compraLojaVirtualDTOList.add(vendaCompraLojaVirtualDTO);

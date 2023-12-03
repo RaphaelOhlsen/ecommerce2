@@ -24,7 +24,7 @@ public class VendaCompraLojaVirtualDTO {
 
     private BigDecimal valorFrete;
 
-    List<ItemVendaDTO> itemVendaLoja = new ArrayList<>();
+    List<ItemVendaDTO> itemVendaLojas = new ArrayList<>();
 
 
     public BigDecimal getValorTotal() {
@@ -83,11 +83,11 @@ public class VendaCompraLojaVirtualDTO {
         this.valorFrete = valorFrete;
     }
 
-    public List<ItemVendaDTO> getItemVendaLoja() {
-        return itemVendaLoja;
+    public List<ItemVendaDTO> getItemVendaLojas() {
+        return itemVendaLojas;
     }
 
-    public void setItemVendaLoja(List<ItemVendaDTO> itemVendaLoja) {
-        this.itemVendaLoja = itemVendaLoja;
+    public void setItemVendaLojas(List<ItemVendaDTO> itemVendaLoja) {
+        this.itemVendaLojas = itemVendaLoja;
     }
 }
