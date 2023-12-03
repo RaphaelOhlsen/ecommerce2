@@ -1,5 +1,8 @@
 package com.mocad.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -30,6 +33,7 @@ public class NotaFiscalVenda implements Serializable {
   @Column(columnDefinition = "text", nullable = false)
   private String pdf;
 
+  @JsonIgnore
   @OneToOne
   @JoinColumn(name = "venda_compra_loja_virt_id", nullable = true,
           foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_compra_loja_virt_fk"))

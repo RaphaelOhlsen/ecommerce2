@@ -22,7 +22,7 @@ public class CupDesc implements Serializable {
   @ManyToOne(targetEntity = Pessoa.class)
   @JoinColumn(name = "empresa_id", nullable = false,
           foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-  private Pessoa empresa;
+  private PessoaJuridica empresa;
 
   private BigDecimal valorRealDesc;
 
@@ -76,11 +76,11 @@ public class CupDesc implements Serializable {
     this.dataValidadeCupom = dataValidadeCupom;
   }
 
-  public Pessoa getEmpresa() {
+  public PessoaJuridica getEmpresa() {
     return empresa;
   }
 
-  public void setEmpresa(Pessoa empresa) {
+  public void setEmpresa(PessoaJuridica empresa) {
     this.empresa = empresa;
   }
 
