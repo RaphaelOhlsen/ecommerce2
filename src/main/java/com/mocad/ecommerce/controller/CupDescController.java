@@ -23,7 +23,11 @@ public class CupDescController {
     private PessoaRepository pessoaJuridicaRepository;
 
     @PostMapping("/salvarCupDesc")
-    public ResponseEntity<CupDesc> salvarCupDesc(@RequestBody CupDesc cupDesc){
+    public ResponseEntity<CupDesc> salvarCupDesc(@RequestBody CupDesc cupDesc) throws ExceptionEcommerce {
+
+        pessoaJuridicaRepository.findById(cupDesc.getEmpresa().getId()).
+                orElseThrow(() -> new ExceptionEcommerce("Empresa não encontrada"));
+
         return ResponseEntity.ok(cupDescRepository.saveAndFlush(cupDesc));
     }
 
