@@ -170,7 +170,7 @@ public class VendaCompraLojaVirtualController {
 
         contaReceberRepository.saveAndFlush(contaReceber);
 
-        /*Emil para o comprador*/
+        /*Email para o comprador*/
         StringBuilder msgemail = new StringBuilder();
         msgemail.append("Olá, ").append(pessoaFisica.getNome()).append("</br>");
         msgemail.append("Você realizou a compra de nº: ").append(vendaCompraLojaVirtual.getId()).append("</br>");
