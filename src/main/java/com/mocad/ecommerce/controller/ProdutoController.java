@@ -137,8 +137,8 @@ public class ProdutoController {
         produtoDTO.setProfundidade(produtoSalvo.getProfundidade());
         produtoDTO.setValorVenda(produtoSalvo.getValorVenda());
         produtoDTO.setQtdEstoque(produtoSalvo.getQtdEstoque());
-        produtoDTO.setQtdAlertaEstoque(produtoSalvo.getQtdAlertaEstoque());
-        produtoDTO.setAlertaQtdEstoque(produtoSalvo.getAlertaQtdEstoque());
+        produtoDTO.setQtdAlertaEstoque(produtoSalvo.getQtdeAlertaEstoque());
+        produtoDTO.setAlertaQtdEstoque(produtoSalvo.getAlertaQtdeEstoque());
         produtoDTO.setQtdClique(produtoSalvo.getQtdClique());
         produtoDTO.setEmpresa(produtoSalvo.getEmpresa().getId());
         produtoDTO.setCategoriaProduto(produtoSalvo.getCategoriaProduto().getId());
@@ -146,7 +146,7 @@ public class ProdutoController {
 
 
 
-        if (produto.getAlertaQtdEstoque() && produto.getQtdEstoque() <= 1) {
+        if (produto.getAlertaQtdeEstoque() && produto.getQtdEstoque() <= 1) {
             StringBuilder html = new StringBuilder();
             html.append("<h2>").append("Produto: ").append(produto.getNome())
                     .append(" com estoque baixo: " + produto.getQtdEstoque())

@@ -28,7 +28,7 @@ public class CupDescController {
         pessoaJuridicaRepository.findById(cupDesc.getEmpresa().getId()).
                 orElseThrow(() -> new ExceptionEcommerce("Empresa não encontrada"));
 
-        return ResponseEntity.ok(cupDescRepository.saveAndFlush(cupDesc));
+        return ResponseEntity.ok(cupDescRepository.save(cupDesc));
     }
 
 
@@ -39,6 +39,17 @@ public class CupDescController {
                 orElseThrow(() -> new ExceptionEcommerce("Empresa não encontrada"));
 
         return ResponseEntity.ok(cupDescRepository.buscarCupDescPorEmpresa(id));
+    }
+
+    @DeleteMapping("/deletarCupDesc/{id}")
+    public ResponseEntity<String> deletarCupDesc(@PathVariable("id") Long id) throws ExceptionEcommerce {
+
+        CupDesc cupDesc = cupDescRepository.findById(id).
+                orElseThrow(() -> new ExceptionEcommerce("Cupom não encontrado"));
+
+        cupDescRepository.delete(cupDesc);
+
+        return ResponseEntity.ok("Cupom deletado com sucesso");
     }
 
 }

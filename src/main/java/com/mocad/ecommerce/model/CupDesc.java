@@ -1,6 +1,7 @@
 package com.mocad.ecommerce.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,6 +17,7 @@ public class CupDesc implements Serializable {
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_cup_desc")
   private Long id;
 
+  @NotBlank(message = "Código do cupom é obrigatório")
   @Column(nullable = false)
   private String codDesc;
 
@@ -28,6 +30,7 @@ public class CupDesc implements Serializable {
 
   private BigDecimal valorPorcentDesc;
 
+  @NotBlank(message = "Data de validade do cupom é obrigatório")
   @Column(nullable = false)
   @Temporal(TemporalType.DATE)
   private Date dataValidadeCupom;

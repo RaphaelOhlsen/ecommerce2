@@ -1,6 +1,7 @@
 package com.mocad.ecommerce.repository;
 
 import com.mocad.ecommerce.model.NotaFiscalCompra;
+import com.mocad.ecommerce.model.dto.RelatorioProdCompraNotaFiscalDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -36,4 +37,5 @@ public interface NotaFiscalCompraRepository extends JpaRepository<NotaFiscalComp
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query(nativeQuery = true, value = "delete from nota_item_produto where nota_fiscal_compra_id = ?1")
     void deleteItemNotaFiscalCompra(Long idNotaFiscalCompra);
+
 }

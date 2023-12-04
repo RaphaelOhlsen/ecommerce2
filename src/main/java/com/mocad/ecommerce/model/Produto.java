@@ -56,13 +56,13 @@ public class Produto implements Serializable {
 
   @NotNull(message = "A quantidade em estoque do produto é obrigatório")
   @Column(nullable = false)
-  private Integer qtdEstoque = 0;
+  private Integer qtdEstoque = 1;
 
-  private Integer qtdAlertaEstoque = 0;
+  private Integer qtdeAlertaEstoque = 1;
 
   private String linkYoutube;
 
-  private Boolean alertaQtdEstoque = Boolean.FALSE;
+  private Boolean alertaQtdeEstoque = Boolean.FALSE;
 
   private Integer qtdClique = 0;
 
@@ -172,13 +172,6 @@ public class Produto implements Serializable {
     this.qtdEstoque = qtdEstoque;
   }
 
-  public Integer getQtdAlertaEstoque() {
-    return qtdAlertaEstoque;
-  }
-
-  public void setQtdAlertaEstoque(Integer qtdAlertaEstoque) {
-    this.qtdAlertaEstoque = qtdAlertaEstoque;
-  }
 
   public String getLinkYoutube() {
     return linkYoutube;
@@ -188,12 +181,20 @@ public class Produto implements Serializable {
     this.linkYoutube = linkYoutube;
   }
 
-  public Boolean getAlertaQtdEstoque() {
-    return alertaQtdEstoque;
+  public Integer getQtdeAlertaEstoque() {
+    return qtdeAlertaEstoque;
   }
 
-  public void setAlertaQtdEstoque(Boolean alertaQtdEstoque) {
-    this.alertaQtdEstoque = alertaQtdEstoque;
+  public void setQtdeAlertaEstoque(Integer qtdeAlertaEstoque) {
+    this.qtdeAlertaEstoque = qtdeAlertaEstoque;
+  }
+
+  public Boolean getAlertaQtdeEstoque() {
+    return alertaQtdeEstoque;
+  }
+
+  public void setAlertaQtdeEstoque(Boolean alertaQtdeEstoque) {
+    this.alertaQtdeEstoque = alertaQtdeEstoque;
   }
 
   public Integer getQtdClique() {
