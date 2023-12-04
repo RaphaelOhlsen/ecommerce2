@@ -1,20 +1,25 @@
 package com.mocad.ecommerce.controller;
 
 import com.mocad.ecommerce.ExceptionEcommerce;
+import com.mocad.ecommerce.enums.StatusContaReceber;
 import com.mocad.ecommerce.model.*;
 import com.mocad.ecommerce.model.dto.ItemVendaDTO;
 import com.mocad.ecommerce.model.dto.VendaCompraLojaVirtualDTO;
 import com.mocad.ecommerce.repository.*;
+import com.mocad.ecommerce.service.ServiceSendEmail;
 import com.mocad.ecommerce.service.VendaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -39,11 +44,20 @@ public class VendaCompraLojaVirtualController {
     @Autowired
     private VendaService vendaService;
 
+    @Autowired
+    private ContaReceberRepository contaReceberRepository;
+
+    @Autowired
+    private ServiceSendEmail serviceSendEmail;
+
+
     private final ModelMapper modelMapper = new ModelMapper();
 
 
     @PostMapping("/salvarVendaLoja")
-    public ResponseEntity<VendaCompraLojaVirtualDTO> salvarVenda(@RequestBody @Valid VendaCompraLojaVirtual vendaCompraLojaVirtual) throws ExceptionEcommerce {
+    public ResponseEntity<VendaCompraLojaVirtualDTO> salvarVenda(
+            @RequestBody @Valid VendaCompraLojaVirtual vendaCompraLojaVirtual)
+            throws ExceptionEcommerce, MessagingException, UnsupportedEncodingException {
 
 //        if (vendaCompraLojaVirtual.getPessoa() == null || vendaCompraLojaVirtual.getPessoa().getId() <= 0){
 //            throw new ExceptionEcommerce("Pessoa não informada ou inválida");
@@ -143,6 +157,32 @@ public class VendaCompraLojaVirtualController {
 //
 //            vendaCompraLojaVirtualDTO.getItemVendaLojas().add(itemVendaDTO);
 //        }
+
+        ContaReceber contaReceber = new ContaReceber();
+        contaReceber.setDescricao("Venda da loja virtual nº: " + vendaCompraLojaVirtual.getId());
+        contaReceber.setDtPagamento(Calendar.getInstance().getTime());
+        contaReceber.setDtVencimento(Calendar.getInstance().getTime());
+        contaReceber.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+        contaReceber.setPessoa(vendaCompraLojaVirtual.getPessoa());
+        contaReceber.setStatus(StatusContaReceber.QUITADA);
+        contaReceber.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
+        contaReceber.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
+
+        contaReceberRepository.saveAndFlush(contaReceber);
+
+        /*Emil para o comprador*/
+        StringBuilder msgemail = new StringBuilder();
+        msgemail.append("Olá, ").append(pessoaFisica.getNome()).append("</br>");
+        msgemail.append("Você realizou a compra de nº: ").append(vendaCompraLojaVirtual.getId()).append("</br>");
+        msgemail.append("Na loja ").append(vendaCompraLojaVirtual.getEmpresa().getNomeFantasia());
+        /*assunto, msg, destino*/
+        serviceSendEmail.enviarEmailHtml("Compra Realizada", msgemail.toString(), pessoaFisica.getEmail());
+
+        /*Email para o vendedor*/
+        msgemail = new StringBuilder();
+        msgemail.append("Você realizou uma venda, nº " ).append(vendaCompraLojaVirtual.getId());
+        serviceSendEmail.enviarEmailHtml("Venda Realizada", msgemail.toString(), vendaCompraLojaVirtual.getEmpresa().getEmail());
+
 
         return ResponseEntity.ok(vendaCompraLojaVirtualDTO);
     }
