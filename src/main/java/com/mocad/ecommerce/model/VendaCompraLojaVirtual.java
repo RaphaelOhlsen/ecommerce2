@@ -1,6 +1,7 @@
 package com.mocad.ecommerce.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.mocad.ecommerce.enums.StatusVendaLojaVirtual;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
@@ -94,6 +95,11 @@ public class VendaCompraLojaVirtual implements Serializable {
   private List<ItemVendaLoja> itemVendaLojas = new ArrayList<ItemVendaLoja>();
 
   private Boolean excluido = Boolean.FALSE;
+
+  @NotNull(message = "O campo status da venda é obrigatório")
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private StatusVendaLojaVirtual statusVendaLojaVirtual;
 
   public Long getId() {
     return id;
@@ -221,6 +227,14 @@ public class VendaCompraLojaVirtual implements Serializable {
 
   public void setExcluido(Boolean excluido) {
     this.excluido = excluido;
+  }
+
+  public StatusVendaLojaVirtual getStatusVendaLojaVirtual() {
+    return statusVendaLojaVirtual;
+  }
+
+  public void setStatusVendaLojaVirtual(StatusVendaLojaVirtual statusVendaLojaVirtual) {
+    this.statusVendaLojaVirtual = statusVendaLojaVirtual;
   }
 
   @Override

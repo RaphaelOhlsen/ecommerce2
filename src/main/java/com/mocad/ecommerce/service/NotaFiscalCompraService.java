@@ -16,6 +16,12 @@ public class NotaFiscalCompraService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    /**
+     * Este relatório permite saber os produtos comprados para serem vendido pela loja virtual, todos os produtos tem relação com a
+     * nota fiscal de compra, e a nota fiscal de compra tem relação com a pessoa jurídica que vendeu o produto.
+     * @param relatorioProdCompraNotaFiscalDTO Objeto RelatorioProdCompraNotaFiscalDTO
+     * @return List<RelatorioProdCompraNotaFiscalDTO> Lista de Objetos RelatorioProdCompraNotaFiscalDTO
+     */
     public List<RelatorioProdCompraNotaFiscalDTO> relatorioProdCompraNotaFiscal(
             RelatorioProdCompraNotaFiscalDTO relatorioProdCompraNotaFiscalDTO) {
 

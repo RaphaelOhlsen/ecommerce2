@@ -21,4 +21,6 @@ public enum StatusContaPagar {
   public String toString() {
     return this.descricao;
   }
+
+
 }
