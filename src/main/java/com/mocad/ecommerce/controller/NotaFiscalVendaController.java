@@ -33,29 +33,29 @@ public class NotaFiscalVendaController {
     @GetMapping("**/buscarNotaFiscalPorVenda/{idVenda}/{idEmpresa}")
     public ResponseEntity<List<NotaFiscalVenda>> buscarNotaFiscalPorVenda(@PathVariable("idVenda") Long idVenda,
                                                                           @PathVariable("idEmpresa") Long idEmpresa)
-            throws ExceptionEcommerce {
+        throws ExceptionEcommerce {
 
-       vendaCompraLojaVirtualRepository.findById(idVenda).
-               orElseThrow(() -> new ExceptionEcommerce("Venda não encontrada"));
+        vendaCompraLojaVirtualRepository.findById(idVenda).
+            orElseThrow(() -> new ExceptionEcommerce("Venda não encontrada"));
 
-       pessoaJuridicaRepository.findById(idEmpresa).
-               orElseThrow(() -> new ExceptionEcommerce("Empresa não encontrada"));
+        pessoaJuridicaRepository.findById(idEmpresa).
+            orElseThrow(() -> new ExceptionEcommerce("Empresa não encontrada"));
 
-       List<NotaFiscalVenda> nota = notaFiscalVendaRepository.buscaNotaPorVenda(idVenda, idEmpresa);
+        List<NotaFiscalVenda> nota = notaFiscalVendaRepository.buscaNotaPorVenda(idVenda, idEmpresa);
 
         return ResponseEntity.ok(nota);
     }
 
     @GetMapping("**/buscarNotaFiscalPorVendaUnica/{idVenda}/{idEmpresa}")
     public ResponseEntity<NotaFiscalVenda> buscarNotaFiscalPorVendaUnica(@PathVariable("idVenda") Long idVenda,
-                                                                          @PathVariable("idEmpresa") Long idEmpresa)
-            throws ExceptionEcommerce {
+                                                                         @PathVariable("idEmpresa") Long idEmpresa)
+        throws ExceptionEcommerce {
 
         vendaCompraLojaVirtualRepository.findById(idVenda).
-                orElseThrow(() -> new ExceptionEcommerce("Venda não encontrada"));
+            orElseThrow(() -> new ExceptionEcommerce("Venda não encontrada"));
 
         pessoaJuridicaRepository.findById(idEmpresa).
-                orElseThrow(() -> new ExceptionEcommerce("Empresa não encontrada"));
+            orElseThrow(() -> new ExceptionEcommerce("Empresa não encontrada"));
 
         NotaFiscalVenda nota = notaFiscalVendaRepository.buscaNotaPorVendaUnica(idVenda, idEmpresa);
 
@@ -69,6 +69,6 @@ public class NotaFiscalVendaController {
      */
     @GetMapping("/relatorioNotaVendaStatus")
     private ResponseEntity<List<RelatorioNFStatusDTO>> relatorioNFStatus(@RequestBody @Valid RelatorioNFStatusDTO relatorioNFStatusDTO) {
-        return ResponseEntity.ok(notaFiscalVendaService.relatorioNFStatus(relatorioNFStatusDTO));
+      return ResponseEntity.ok(notaFiscalVendaService.relatorioNFStatus(relatorioNFStatusDTO));
     }
 }
