@@ -96,6 +96,13 @@ public class VendaCompraLojaVirtual implements Serializable {
 
   private Boolean excluido = Boolean.FALSE;
 
+  private String codigoEtiqueta;
+
+  private String urlImprimeEtiqueta;
+
+  //Frete que foi escolhido pelo cliente no momento da compra
+  private String servicoTransportadora;
+
   @NotNull(message = "O campo status da venda é obrigatório")
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
@@ -235,6 +242,30 @@ public class VendaCompraLojaVirtual implements Serializable {
 
   public void setStatusVendaLojaVirtual(StatusVendaLojaVirtual statusVendaLojaVirtual) {
     this.statusVendaLojaVirtual = statusVendaLojaVirtual;
+  }
+
+  public String getCodigoEtiqueta() {
+    return codigoEtiqueta;
+  }
+
+  public void setCodigoEtiqueta(String codigoEtiqueta) {
+    this.codigoEtiqueta = codigoEtiqueta;
+  }
+
+  public String getUrlImprimeEtiqueta() {
+    return urlImprimeEtiqueta;
+  }
+
+  public void setUrlImprimeEtiqueta(String urlImprimeEtiqueta) {
+    this.urlImprimeEtiqueta = urlImprimeEtiqueta;
+  }
+
+  public String getServicoTransportadora() {
+    return servicoTransportadora;
+  }
+
+  public void setServicoTransportadora(String servicoTransportadora) {
+    this.servicoTransportadora = servicoTransportadora;
   }
 
   @Override
