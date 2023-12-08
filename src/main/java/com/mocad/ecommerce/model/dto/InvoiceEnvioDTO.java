@@ -15,5 +15,4 @@ public class InvoiceEnvioDTO implements Serializable {
   public void setKey(String key) {
     this.key = key;
   }
-
 }

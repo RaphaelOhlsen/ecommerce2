@@ -21,6 +21,8 @@ public class FromEnvioEtiquetaDTO implements Serializable {
   private String postal_code;
   private String note;
 
+  private String state_abbr;
+
   public String getName() {
     return name;
   }
@@ -133,5 +135,12 @@ public class FromEnvioEtiquetaDTO implements Serializable {
     this.note = note;
   }
 
+  public String getState_abbr() {
+    return state_abbr;
+  }
+
+  public void setState_abbr(String state_abbr) {
+    this.state_abbr = state_abbr;
+  }
 }
 

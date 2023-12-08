@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class ToEnvioEtiquetaDTO implements Serializable {
 
   private static final long serialVersionUID = 1L;
-
   private String name;
   private String phone;
   private String email;
@@ -17,6 +16,7 @@ public class ToEnvioEtiquetaDTO implements Serializable {
   private String number;
   private String district;
   private String city;
+  private String state_abbr;
   private String country_id;
   private String postal_code;
   private String note;
@@ -109,6 +109,14 @@ public class ToEnvioEtiquetaDTO implements Serializable {
     this.city = city;
   }
 
+  public String getState_abbr() {
+    return state_abbr;
+  }
+
+  public void setState_abbr(String state_abbr) {
+    this.state_abbr = state_abbr;
+  }
+
   public String getCountry_id() {
     return country_id;
   }
@@ -134,4 +142,3 @@ public class ToEnvioEtiquetaDTO implements Serializable {
   }
 
 }
-

@@ -34,8 +34,14 @@ public class Endereco implements Serializable {
   @Column(nullable = false)
   private String cidade;
 
+//  @Column(nullable = false)
+  private String estado;
+
   @Column(nullable = false)
   private String uf;
+
+  @Column
+  private String country_id;
 
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
@@ -139,6 +145,22 @@ public class Endereco implements Serializable {
 
   public void setEmpresa(Pessoa empresa) {
     this.empresa = empresa;
+  }
+
+  public String getEstado() {
+    return estado;
+  }
+
+  public void setEstado(String estado) {
+    this.estado = estado;
+  }
+
+  public String getCountry_id() {
+    return country_id;
+  }
+
+  public void setCountry_id(String country_id) {
+    this.country_id = country_id;
   }
 
   @Override

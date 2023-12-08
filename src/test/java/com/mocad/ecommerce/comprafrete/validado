@@ -1,0 +1,66 @@
+{
+  "from": {
+    "name": "Lojas 3",
+    "phone": "27993162448",
+    "email": "teste@teste.com",
+    "company_document": "57758248000133",
+    "state_register": "44997577-0",
+    "address": "Rua Teste",
+    "complement": "1101",
+    "number": "315",
+    "district": "Praia do Canto",
+    "city": "Vitoria",
+    "country_id": "BR",
+    "postal_code": "29055340",
+    "state_abbr": "ES",
+    "note": "nada"
+  },
+  "to": {
+    "name": "Aroldo",
+    "phone": "27 99312323",
+    "email": "aroldo@teste.com",
+    "document": "00959914765",
+    "address": "Rua Praia",
+    "complement": "210",
+    "number": "315",
+    "district": "Jardim ",
+    "city": "Vitoria",
+    "country_id": "BR",
+    "postal_code": "29055340",
+    "state_abbr": "ES",
+    "note": "sem "
+  },
+  "options": {
+    "receipt": true,
+    "own_hand": true,
+    "reverse": true,
+    "non_commercial": true,
+    "invoice": {
+      "key": "31190307586261000184550010000092481404848162"
+    },
+    "plataform": "Loja",
+    "tags": [
+      {
+        "tag": "12"
+      }
+    ],
+    "insurance_value": 12
+  },
+  "service": 3,
+  "products": [
+    {
+      "name": "Relogio",
+      "quantity": "1",
+      "unitary_value": "100"
+    }
+  ],
+  "volumes": [
+    {
+      "height": 10,
+      "width": 10,
+      "length": 10,
+      "weight": 10
+    }
+  ],
+  "agency": 49
+}

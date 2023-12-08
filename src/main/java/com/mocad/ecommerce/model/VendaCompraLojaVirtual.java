@@ -96,8 +96,10 @@ public class VendaCompraLojaVirtual implements Serializable {
 
   private Boolean excluido = Boolean.FALSE;
 
+  @Column(name = "codigo_etiqueta")
   private String codigoEtiqueta;
 
+  @Column(name = "url_imprime_etiqueta")
   private String urlImprimeEtiqueta;
 
   //Frete que foi escolhido pelo cliente no momento da compra
@@ -263,6 +265,8 @@ public class VendaCompraLojaVirtual implements Serializable {
   public String getServicoTransportadora() {
     return servicoTransportadora;
   }
+
+
 
   public void setServicoTransportadora(String servicoTransportadora) {
     this.servicoTransportadora = servicoTransportadora;

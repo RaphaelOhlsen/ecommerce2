@@ -1,5 +1,7 @@
 package com.mocad.ecommerce.model;
 
+import com.mocad.ecommerce.enums.TipoEndereco;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -40,6 +42,18 @@ public abstract class Pessoa implements Serializable {
   @JoinColumn(name = "empresa_id",
           foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
   private Pessoa empresa;
+
+
+  public Endereco enderecoEntrega() {
+    Endereco enderecoEntrega = null;
+    for (Endereco endereco : enderecos) {
+      if (endereco.getTipoEndereco().name().equals(TipoEndereco.ENTREGA.name())) {
+        enderecoEntrega = endereco;
+        break;
+      }
+    }
+    return enderecoEntrega;
+  }
 
   public Long getId() {
     return id;

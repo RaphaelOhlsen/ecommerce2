@@ -8,7 +8,7 @@ public class OptionsEnvioEtiquetaDTO implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private String insurance_value;
+  private Integer insurance_value;
 
   private boolean receipt;
   private boolean own_hand;
@@ -21,11 +21,11 @@ public class OptionsEnvioEtiquetaDTO implements Serializable {
 
   private List<TagsEnvioDTO> tags = new ArrayList<>();
 
-  public String getInsurance_value() {
+  public Integer getInsurance_value() {
     return insurance_value;
   }
 
-  public void setInsurance_value(String insurance_value) {
+  public void setInsurance_value(Integer insurance_value) {
     this.insurance_value = insurance_value;
   }
 
