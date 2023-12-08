@@ -105,6 +105,8 @@ public class VendaCompraLojaVirtual implements Serializable {
   //Frete que foi escolhido pelo cliente no momento da compra
   private String servicoTransportadora;
 
+  private String url_rastreio;
+
   @NotNull(message = "O campo status da venda é obrigatório")
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)

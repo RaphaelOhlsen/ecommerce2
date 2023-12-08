@@ -79,7 +79,7 @@ public class VendaCompraLojaVirtualController {
 //        if (vendaCompraLojaVirtual.getEnderecoEntrega() == null || vendaCompraLojaVirtual.getEnderecoEntrega().getId() <= 0){
 //            throw new ExceptionEcommerce("Endereço de entrega não informado ou inválido");
 //        }
-//
+//9acd1a0b-b2ca-4a3b-8c34-21afe4aec036
 //        if (vendaCompraLojaVirtual.getEnderecoCobranca() == null || vendaCompraLojaVirtual.getEnderecoCobranca().getId() <= 0){
 //            throw new ExceptionEcommerce("Endereço de cobrança não informado ou inválido");
 //        }
@@ -127,7 +127,6 @@ public class VendaCompraLojaVirtualController {
     statusRastreio.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
     statusRastreio.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
     statusRastreioRepository.save(statusRastreio);
-
 
 
     /* Associa a venda gravada no banco com a nota fiscal */
@@ -614,8 +613,37 @@ public class VendaCompraLojaVirtualController {
 
     vendaCompraLojaVirtualRepository.updateURLEtiqueta(urlEtiqueta, compraLojaVirtual.getId());
 
+    System.out.println("URL da etiqueta: " + urlEtiqueta);
 
-    return ResponseEntity.ok("Etiqueta gerada com sucesso");
+    OkHttpClient rastreio = new OkHttpClient().newBuilder().build();
+    okhttp3.MediaType mediaTypeRastreio = MediaType.parse("application/json");
+    okhttp3.RequestBody bodyRastreio = okhttp3.RequestBody.create(mediaTypeRastreio, "{\n    \"orders\": [\n        \"" + idEtiqueta + "\"\n    ]\n}");
+    okhttp3.Request requestRastreio = new Request.Builder()
+        .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SAND_BOX + "api/v2/me/shipment/tracking")
+        .method("POST", bodyRastreio)
+        .addHeader("Accept", "application/json")
+        .addHeader("Content-Type", "application/json")
+        .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SAND_BOX)
+        .addHeader("User-Agent", "raphael@mocad.dev").build();
+
+    okhttp3.Response responseRastreio = rastreio.newCall(requestRastreio).execute();
+
+    String respostaRastreio = responseRastreio.body().string();
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode jsonNodeRastreio = objectMapper.readTree(respostaRastreio);
+
+    String melhorenvioTracking = "";
+
+    for (JsonNode etiquetaNode : jsonNodeRastreio) {
+      melhorenvioTracking = etiquetaNode.get("melhorenvio_tracking").asText();
+      break;
+    }
+
+    String urlRastreio = "https://www.melhorrastreio.com.br/rastreio/" + melhorenvioTracking;
+
+    vendaCompraLojaVirtualRepository.updateURLRastreio(urlRastreio, compraLojaVirtual.getId());
+
+    return ResponseEntity.ok(melhorenvioTracking);
 
   }
 

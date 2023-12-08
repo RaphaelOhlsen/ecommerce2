@@ -71,4 +71,8 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
   @Modifying(flushAutomatically = true)
   @Query(nativeQuery = true, value = "update vd_cp_loja_virt set url_imprime_etiqueta = ?1 where id = ?2")
   void updateURLEtiqueta(String urlEtiqueta, Long idVenda);
+
+  @Modifying(flushAutomatically = true)
+  @Query(nativeQuery = true, value = "update vd_cp_loja_virt set url_rastreio = ?1 where id = ?2")
+  void updateURLRastreio(String urlRastreio, Long idVenda);
 }
