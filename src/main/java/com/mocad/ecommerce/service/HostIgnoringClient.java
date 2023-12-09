@@ -35,7 +35,7 @@ public class HostIgnoringClient implements Serializable {
   }
 
 
-  public Client hostIgnoringCliente () throws Exception {
+  public Client hostIgnoringClient () throws Exception {
 
     TrustManager[] trustManagers = new TrustManager[] {
 
