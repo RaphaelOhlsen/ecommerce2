@@ -27,8 +27,5 @@ public class AccessTokenJunoService {
     }catch (NoResultException e) {
       return null;
     }
-
-
   }
-
 }
