@@ -9,6 +9,7 @@ import com.mocad.ecommerce.env.ApiTokenIntegracao;
 import com.mocad.ecommerce.model.*;
 import com.mocad.ecommerce.model.dto.*;
 import com.mocad.ecommerce.repository.*;
+import com.mocad.ecommerce.service.ServiceJunoBoleto;
 import com.mocad.ecommerce.service.ServiceSendEmail;
 import com.mocad.ecommerce.service.VendaService;
 import okhttp3.MediaType;
@@ -55,6 +56,9 @@ public class VendaCompraLojaVirtualController {
 
   @Autowired
   private ServiceSendEmail serviceSendEmail;
+
+  @Autowired
+  private ServiceJunoBoleto serviceJunoBoleto;
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
@@ -690,6 +694,12 @@ public class VendaCompraLojaVirtualController {
 
     return ResponseEntity.ok("Etiqueta cancelada com sucesso");
 
+  }
+
+  @ResponseBody
+  @PostMapping(value = "**/gerarBoletoPix")
+  public ResponseEntity<String> gerarBoletoPix(@RequestBody @Valid ObjetoPostCarneJuno objetoPostCarneJuno) throws Exception{
+    return ResponseEntity.ok(serviceJunoBoleto.gerarCarneApi(objetoPostCarneJuno));
   }
 }
 
