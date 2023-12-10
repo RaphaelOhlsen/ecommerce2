@@ -33,7 +33,7 @@ public class BoletoJuno implements Serializable {
   private String link;
 
   /*
-   * Mostra um telinha de checkout da Juno com os boleto, pix e cartão pagos ou
+   * Mostra uma telinha de checkout da Juno com os boletos, pix e cartão pagos ou
    * vencidos
    */
   private String checkoutUrl = "";
