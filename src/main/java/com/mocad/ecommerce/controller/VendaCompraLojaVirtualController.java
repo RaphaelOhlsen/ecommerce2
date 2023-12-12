@@ -701,5 +701,11 @@ public class VendaCompraLojaVirtualController {
   public ResponseEntity<String> gerarBoletoPix(@RequestBody @Valid ObjetoPostCarneJuno objetoPostCarneJuno) throws Exception{
     return ResponseEntity.ok(serviceJunoBoleto.gerarCarneApi(objetoPostCarneJuno));
   }
+
+  @ResponseBody
+  @PostMapping(value = "**/cancelarBoletoPix")
+  public ResponseEntity<String> cancelarBoletoPix(@RequestBody @Valid String code) throws Exception{
+    return ResponseEntity.ok(serviceJunoBoleto.cancelarBoleto(code));
+  }
 }
 
