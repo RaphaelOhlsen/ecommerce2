@@ -61,17 +61,8 @@ public class PagamentoController implements Serializable {
   public ModelAndView pagamento(@PathVariable(value = "idVendaCompra",
       required = false) String idVendaCompra) {
 
-    ModelAndView modelAndView = new ModelAndView("pagamento");
 
-    VendaCompraLojaVirtual compraLojaVirtual = vd_Cp_Loja_virt_repository.findByIdExclusao(Long.parseLong(idVendaCompra));
-
-    if (compraLojaVirtual == null) {
-      modelAndView.addObject("venda", new VendaCompraLojaVirtualDTO());
-    }else {
-      modelAndView.addObject("venda", vendaService.consultaVenda(compraLojaVirtual));
-    }
-
-    return modelAndView;
+    return new ModelAndView("pagamento");
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "**/finalizarCompraCartao")

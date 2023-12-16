@@ -105,7 +105,7 @@ public class JWTTokenAutenticacaoService {
 	}
 	
 	
-	/*Fazendo liberação contra erro de COrs no navegador*/
+	/*Fazendo liberação contra erro de Cors no navegador*/
 	private void liberacaoCors(HttpServletResponse response) {
 		
 		if (response.getHeader("Access-Control-Allow-Origin") == null) {
