@@ -208,27 +208,9 @@ public class VendaCompraLojaVirtualController {
       vendaCompraLojaVirtual = new VendaCompraLojaVirtual();
     }
 
-    VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
+    VendaCompraLojaVirtualDTO compraLojaVirtualDTO = vendaService.consultaVenda(vendaCompraLojaVirtual);
 
-    vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
-    vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoa());
-    vendaCompraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
-    vendaCompraLojaVirtualDTO.setEnderecoCobranca(vendaCompraLojaVirtual.getEnderecoCobranca());
-    vendaCompraLojaVirtualDTO.setEnderecoEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
-    vendaCompraLojaVirtualDTO.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
-    vendaCompraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());
-
-    for (ItemVendaLoja item : vendaCompraLojaVirtual.getItemVendaLojas()) {
-
-      ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
-      itemVendaDTO.setId(item.getId());
-      itemVendaDTO.setProduto(item.getProduto());
-      itemVendaDTO.setQuantidade(item.getQuantidade());
-
-      vendaCompraLojaVirtualDTO.getItemVendaLojas().add(itemVendaDTO);
-    }
-
-    return ResponseEntity.ok(vendaCompraLojaVirtualDTO);
+    return ResponseEntity.ok(compraLojaVirtualDTO);
   }
 
   @DeleteMapping("/deleteVendaTotalBanco/{id}")
