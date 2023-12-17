@@ -18,11 +18,11 @@ public class VendaCompraLojaVirtualDTO {
 
     private Endereco enderecoCobranca;
 
-    private BigDecimal valorTotal;
+    private BigDecimal valorTotal = BigDecimal.ZERO;
 
-    private BigDecimal valorDesconto;
+    private BigDecimal valorDesconto = BigDecimal.ZERO;
 
-    private BigDecimal valorFrete;
+    private BigDecimal valorFrete = BigDecimal.ZERO;
 
     List<ItemVendaDTO> itemVendaLojas = new ArrayList<>();
 

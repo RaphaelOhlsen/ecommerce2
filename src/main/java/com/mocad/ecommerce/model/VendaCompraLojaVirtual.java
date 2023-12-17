@@ -129,6 +129,8 @@ public class VendaCompraLojaVirtual implements Serializable {
   }
 
   public BigDecimal getValorDesconto() {
+    if (valorDesconto == null)
+      setValorDesconto(BigDecimal.ZERO);
     return valorDesconto;
   }
 
