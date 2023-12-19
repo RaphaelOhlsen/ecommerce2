@@ -4,6 +4,7 @@ import com.mocad.ecommerce.model.dto.ObjetoPostCarneJuno;
 import com.mocad.ecommerce.service.ServiceJunoBoleto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,5 +22,10 @@ public class AsassControler {
   @GetMapping(value = "/consultarCliente")
   public String consultarCliente(@RequestBody ObjetoPostCarneJuno pessoa) throws Exception {
     return serviceJunoBoleto.buscaClientePessoaApiAsaas(pessoa);
+  }
+
+  @PostMapping(value = "/gerarCarneApiAsaas")
+  public String gerarCarneApiAsaas(@RequestBody ObjetoPostCarneJuno pessoa) throws Exception {
+    return serviceJunoBoleto.gerarCarneApiAsaas(pessoa);
   }
 }

@@ -81,11 +81,11 @@ public class CobrancaApiAsaas {
     this.externalReference = externalReference;
   }
 
-  public DiscontCobancaAsaas getDiscount() {
+  public DiscontCobrancaAsaas getDiscount() {
     return discount;
   }
 
-  public void setDiscount(DiscontCobancaAsaas discount) {
+  public void setDiscount(DiscontCobrancaAsaas discount) {
     this.discount = discount;
   }
 
