@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
@@ -19,12 +20,15 @@ import com.mocad.ecommerce.model.dto.*;
 import com.mocad.ecommerce.repository.AccesTokenJunoRepository;
 import com.mocad.ecommerce.repository.BoletoJunoRepository;
 import com.mocad.ecommerce.repository.VendaCompraLojaVirtualRepository;
+import com.mocad.ecommerce.utils.ValidaCPF;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.google.gson.Gson;
 
 import com.mocad.ecommerce.env.ApiTokenIntegracao;
 
@@ -48,6 +52,91 @@ public class ServiceJunoBoleto implements Serializable {
   private BoletoJunoRepository boletoJunoRepository;
 
 
+  /**
+   * suporte@jdetreinamento.com.br
+   59dwed9898sd8
+   * Retorna o id do Customer (Pessoa/cliente)
+   */
+  public String buscaClientePessoaApiAsaas(ObjetoPostCarneJuno dados) throws Exception {
+
+    /*id do clinete para ligar com a conbrança*/
+    String customer_id = "";
+
+    /*--------------INICIO - criando ou consultando o cliente*/
+
+    Client client = new HostIgnoringClient(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringClient();
+    WebResource webResource = client.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "customers?email="+dados.getEmail());
+
+    ClientResponse clientResponse = webResource.accept("application/json;charset=UTF-8")
+        .header("Content-Type", "application/json")
+        .header("access_token", AsaasApiPagamentoStatus.API_KEY)
+        .get(ClientResponse.class);
+
+    LinkedHashMap<String, Object> parser = new JSONParser(clientResponse.getEntity(String.class)).parseObject();
+    clientResponse.close();
+    Integer total = Integer.parseInt(parser.get("totalCount").toString());
+
+    if (total <= 0) { /*Cria o cliente*/
+
+      ClienteAsaasApiPagamento clienteAsaasApiPagamento = new ClienteAsaasApiPagamento();
+
+      if (!ValidaCPF.isCPF(dados.getPayerCpfCnpj())) {
+        clienteAsaasApiPagamento.setCpfCnpj("60051803046");
+      }else {
+        clienteAsaasApiPagamento.setCpfCnpj(dados.getPayerCpfCnpj());
+      }
+
+      clienteAsaasApiPagamento.setEmail(dados.getEmail());
+      clienteAsaasApiPagamento.setName(dados.getPayerName());
+      clienteAsaasApiPagamento.setPhone(dados.getPayerPhone());
+
+      Client client2 = new HostIgnoringClient(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringClient();
+      WebResource webResource2 = client2.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "customers");
+
+      ClientResponse clientResponse2 = webResource2.accept("application/json;charset=UTF-8")
+          .header("Content-Type", "application/json")
+          .header("access_token", AsaasApiPagamentoStatus.API_KEY)
+          .post(ClientResponse.class, new ObjectMapper().writeValueAsBytes(clienteAsaasApiPagamento));
+
+      LinkedHashMap<String, Object> parser2 = new JSONParser(clientResponse2.getEntity(String.class)).parseObject();
+      clientResponse2.close();
+
+      customer_id = parser2.get("id").toString();
+
+    }else {/*Já tem cliente cadastrado*/
+      List<Object> data = (List<Object>) parser.get("data");
+//      List<Object> data = (List<Object>) parser.get("data");
+      customer_id = new Gson().toJsonTree(data.get(0)).getAsJsonObject().get("id").toString().replaceAll("\"", "");
+    }
+
+    return customer_id;
+
+
+  }
+
+
+
+  /**
+   * Cria a chave da API Asass para o PIX;
+   * @return Chave
+   */
+  public String criarChavePixAsaas() throws Exception {
+
+    Client client = new HostIgnoringClient(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringClient();
+    WebResource webResource = client.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "pix/addressKeys");
+
+    ClientResponse clientResponse = webResource.accept("application/json;charset=UTF-8")
+        .header("Content-Type", "application/json")
+        .header("access_token", AsaasApiPagamentoStatus.API_KEY)
+        .post(ClientResponse.class, "{\"type\":\"EVP\"}");
+
+    String stringRetorno = clientResponse.getEntity(String.class);
+    clientResponse.close();
+    return stringRetorno;
+
+  }
+
+
   public String cancelarBoleto(String code) throws Exception {
 
     AccessTokenJunoAPI accessTokenJunoAPI = this.obterTokenApiJuno();
@@ -62,6 +151,7 @@ public class ServiceJunoBoleto implements Serializable {
         .put(ClientResponse.class);
 
     if (clientResponse.getStatus() == 204) {
+      boletoJunoRepository.deleteByCode(code);
       return "Cancelado com sucesso";
     }
 

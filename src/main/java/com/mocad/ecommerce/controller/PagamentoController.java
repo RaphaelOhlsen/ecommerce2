@@ -94,29 +94,29 @@ public class PagamentoController implements Serializable {
         findById(idVendaCampo).orElse(null);
 
     if (vendaCompraLojaVirtual == null) {
-      return new ResponseEntity<String>("Código da venda não existe!", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("Código da venda não existe!");
     }
 
     String cpfLimpo =  cpf.replaceAll("\\.", "").replaceAll("\\-", "");
 
     if (!ValidaCPF.isCPF(cpfLimpo)) {
-      return new ResponseEntity<String>("CPF informado é inválido.", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("CPF informado é inválido.");
     }
 
 
     if (qtdparcela > 12 || qtdparcela <= 0) {
-      return new ResponseEntity<String>("Quantidade de parcelar deve ser de  1 até 12.", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("Quantidade de parcelar deve ser de  1 até 12.");
     }
 
     if (vendaCompraLojaVirtual.getValorTotal().doubleValue() <= 0) {
-      return new ResponseEntity<String>("Valor da venda não pode ser Zero(0).", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("Valor da venda não pode ser Zero(0).");
     }
 
 
     AccessTokenJunoAPI accessTokenJunoAPI = serviceJunoBoleto.obterTokenApiJuno();
 
     if (accessTokenJunoAPI == null) {
-      return new ResponseEntity<String>("Autorização bancária não foi encontrada.", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("Autorização bancária não foi encontrada.");
     }
 
 
@@ -214,7 +214,7 @@ public class PagamentoController implements Serializable {
 
 
     if (boletosJuno == null || (boletosJuno != null && boletosJuno.isEmpty())) {
-      return new ResponseEntity<String>("O registro financeiro não pode ser criado para pagamento", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("O registro financeiro não pode ser criado para pagamento.");
     }
 
 
@@ -262,7 +262,7 @@ public class PagamentoController implements Serializable {
         serviceJunoBoleto.cancelarBoleto(boletoJuno.getCode());
       }
 
-      return new ResponseEntity<String>(erroResponseApiJuno.listaErro(), HttpStatus.OK);
+      return ResponseEntity.ok(erroResponseApiJuno.listaErro());
     }
 
     RetornoPagamentoCartaoJuno retornoPagamentoCartaoJuno = objectMapperCartao.
@@ -274,7 +274,7 @@ public class PagamentoController implements Serializable {
         serviceJunoBoleto.cancelarBoleto(boletoJuno.getCode());
       }
 
-      return new ResponseEntity<String>("Nenhum pagamento foi retornado para processar.", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("Nenhum pagamento foi retornado para processar.");
     }
 
     PaymentsCartaoCredito cartaoCredito = retornoPagamentoCartaoJuno.getPayments().get(0);
@@ -286,21 +286,23 @@ public class PagamentoController implements Serializable {
     }
 
     if (cartaoCredito.getStatus().equalsIgnoreCase("DECLINED")) {
-      return new ResponseEntity<String>("Pagamento rejeito pela análise de risco", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("Pagamento ejeitado pela análise de risco.");
     }else  if (cartaoCredito.getStatus().equalsIgnoreCase("FAILED")) {
-      return new ResponseEntity<String>("Pagamento não realizado por falha", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("Pagamento não realizado por falha");
     }
     else  if (cartaoCredito.getStatus().equalsIgnoreCase("NOT_AUTHORIZED")) {
-      return new ResponseEntity<String>("Pagamento não autorizado pela instituição responsável pleo cartão de crédito, no caso, a emissora do seu cartão.", HttpStatus.OK);
+      return ResponseEntity.badRequest().body(
+          "Pagamento não autorizado pela instituição responsável pleo cartão de crédito, no caso, a emissora do seu cartão."
+      );
     }
     else  if (cartaoCredito.getStatus().equalsIgnoreCase("CUSTOMER_PAID_BACK")) {
-      return new ResponseEntity<String>("Pagamento estornado a pedido do cliente.", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("Pagamento estornado a pedido do cliente.");
     }
     else  if (cartaoCredito.getStatus().equalsIgnoreCase("BANK_PAID_BACK")) {
-      return new ResponseEntity<String>("Pagamento estornado a pedido do banco.", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("Pagamento estornado a pedido do banco.");
     }
     else  if (cartaoCredito.getStatus().equalsIgnoreCase("PARTIALLY_REFUNDED")) {
-      return new ResponseEntity<String>("Pagamento parcialmente estornado.", HttpStatus.OK);
+      return ResponseEntity.badRequest().body("Pagamento parcialmente estornado.");
     }
     else  if (cartaoCredito.getStatus().equalsIgnoreCase("CONFIRMED")) {
 
@@ -313,9 +315,7 @@ public class PagamentoController implements Serializable {
       return new ResponseEntity<String>("sucesso", HttpStatus.OK);
     }
 
-
-    return new ResponseEntity<String>("Nenhuma operação realizada!",HttpStatus.OK);
-
+    return ResponseEntity.badRequest().body("Nenhuma operação realizada!");
   }
 
 }
