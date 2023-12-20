@@ -192,60 +192,58 @@ public class ServiceJunoBoleto implements Serializable {
     String stringRetorno = clientResponse.getEntity(String.class);
     clientResponse.close();
 
-    return stringRetorno;
-//    /*Buscando parcelas geradas*/
-//
-//    LinkedHashMap<String, Object> parser = new JSONParser(stringRetorno).parseObject();
-//    String installment = parser.get("installment").toString();
-//    Client client2 = new HostIgnoringClient(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringClient();
-//    WebResource webResource2 = client2.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "payments?installment=" + installment);
-//    ClientResponse clientResponse2 = webResource2
-//        .accept("application/json;charset=UTF-8")
-//        .header("Content-Type", "application/json")
-//        .header("access_token", AsaasApiPagamentoStatus.API_KEY)
-//        .get(ClientResponse.class);
-//
-//    String retornoCobrancas = clientResponse2.getEntity(String.class);
-//    /*Buscando parcelas geradas*/
-//
-//    ObjectMapper objectMapper = new ObjectMapper();
-//    objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-//    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-//
-//    CobrancaGeradaAsassApi listaCobranca = objectMapper
-//        .readValue(retornoCobrancas, new TypeReference<CobrancaGeradaAsassApi>() {});
-//
-//    List<BoletoJuno> boletoJunos = new ArrayList<BoletoJuno>();
-//    int recorrencia = 1;
-//    for (CobrancaGeradaAssasData data : listaCobranca.getData()) {
-//
-//      BoletoJuno boletoJuno = new BoletoJuno();
-//
-//      boletoJuno.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
-//      boletoJuno.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
-//      boletoJuno.setCode(data.getId());
-//      boletoJuno.setLink(data.getInvoiceUrl());
-//      boletoJuno.setDataVencimento(new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("yyyy-MM-dd").parse(data.getDueDate())));
-//      boletoJuno.setCheckoutUrl(data.getInvoiceUrl());
-//      boletoJuno.setValor(new BigDecimal(data.getValue()));
-//      boletoJuno.setIdChrBoleto(data.getId());
-//      boletoJuno.setInstallmentLink(data.getInvoiceUrl());
-//      boletoJuno.setRecorrencia(recorrencia);
-//
-//      //boletoJuno.setIdPix(c.getPix().getId());
-//
-//      ObjetoQrCodePixAsaas codePixAsaas = this.buscarQrCodeCodigoPix(data.getId());
-//
-//      boletoJuno.setPayloadInBase64(codePixAsaas.getPayload());
-//      boletoJuno.setImageInBase64(codePixAsaas.getEncodedImage());
-//
-//      boletoJunos.add(boletoJuno);
-//      recorrencia ++;
-//    }
-//
-//    boletoJunoRepository.saveAllAndFlush(boletoJunos);
-//
-//    return boletoJunos.get(0).getCheckoutUrl();
+    /*Buscando parcelas geradas*/
+    LinkedHashMap<String, Object> parser = new JSONParser(stringRetorno).parseObject();
+    String installment = parser.get("installment").toString();
+    Client client2 = new HostIgnoringClient(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringClient();
+    WebResource webResource2 = client2.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "payments?installment=" + installment);
+    ClientResponse clientResponse2 = webResource2
+        .accept("application/json;charset=UTF-8")
+        .header("Content-Type", "application/json")
+        .header("access_token", AsaasApiPagamentoStatus.API_KEY)
+        .get(ClientResponse.class);
+
+    String retornoCobrancas = clientResponse2.getEntity(String.class);
+    /*Buscando parcelas geradas*/
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+    CobrancaGeradaAsassApi listaCobranca = objectMapper
+        .readValue(retornoCobrancas, new TypeReference<CobrancaGeradaAsassApi>() {});
+
+    List<BoletoJuno> boletoJunos = new ArrayList<BoletoJuno>();
+    int recorrencia = 1;
+    for (CobrancaGeradaAssasData data : listaCobranca.getData()) {
+
+      BoletoJuno boletoJuno = new BoletoJuno();
+
+      boletoJuno.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+      boletoJuno.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+      boletoJuno.setCode(data.getId());
+      boletoJuno.setLink(data.getInvoiceUrl());
+      boletoJuno.setDataVencimento(new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("yyyy-MM-dd").parse(data.getDueDate())));
+      boletoJuno.setCheckoutUrl(data.getInvoiceUrl());
+      boletoJuno.setValor(new BigDecimal(data.getValue()));
+      boletoJuno.setIdChrBoleto(data.getId());
+      boletoJuno.setInstallmentLink(data.getInvoiceUrl());
+      boletoJuno.setRecorrencia(recorrencia);
+
+      //boletoJuno.setIdPix(c.getPix().getId());
+
+      ObjetoQrCodePixAsaas codePixAsaas = this.buscarQrCodeCodigoPix(data.getId());
+
+      boletoJuno.setPayloadInBase64(codePixAsaas.getPayload());
+      boletoJuno.setImageInBase64(codePixAsaas.getEncodedImage());
+
+      boletoJunos.add(boletoJuno);
+      recorrencia ++;
+    }
+
+    boletoJunoRepository.saveAllAndFlush(boletoJunos);
+
+    return boletoJunos.get(0).getCheckoutUrl();
 
   }
 
