@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.mocad.ecommerce.env.ApiTokenIntegracao;
 import com.mocad.ecommerce.model.AccessTokenJunoAPI;
+import com.mocad.ecommerce.model.PessoaFisica;
 import com.mocad.ecommerce.model.VendaCompraLojaVirtual;
 import com.mocad.ecommerce.model.BoletoJuno;
 import com.mocad.ecommerce.model.dto.*;
@@ -37,6 +38,7 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -168,7 +170,7 @@ public class PagamentoController implements Serializable {
 
     String json = new ObjectMapper().writeValueAsString(cobrancaApiAsaasCartao);
 
-    Client client = new HostIgnoringCliente(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringCliente();
+    Client client = new HostIgnoringClient(AsaasApiPagamentoStatus.URL_API_ASAAS).hostIgnoringClient();
     WebResource webResource = client.resource(AsaasApiPagamentoStatus.URL_API_ASAAS + "payments");
 
     ClientResponse clientResponse = webResource

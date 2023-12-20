@@ -8,8 +8,13 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface BoletoJunoRepository extends JpaRepository<BoletoJuno, Long> {
+
+  @Query("select b from BoletoJuno b where b.vendaCompraLojaVirtual.id = ?1 and b.quitado = false")
+  public List<BoletoJuno> cobrancaDaVendaCompra(Long idVendaCompra);
 
   @Query("select b from BoletoJuno b where b.code = ?1")
   BoletoJuno findByCode (String code);
