@@ -126,6 +126,7 @@ public class PagamentoController implements Serializable {
     carne.setPayerCpfCnpj(cpfLimpo);
     carne.setPayerName(holderName);
     carne.setPayerPhone(vendaCompraLojaVirtual.getPessoa().getTelefone());
+    carne.setEmail(vendaCompraLojaVirtual.getPessoa().getEmail());
 
     CobrancaApiAsaasCartao cobrancaApiAsaasCartao = new CobrancaApiAsaasCartao();
     cobrancaApiAsaasCartao.setCustomer(serviceJunoBoleto.buscaClientePessoaApiAsaas(carne));
@@ -200,6 +201,10 @@ public class PagamentoController implements Serializable {
       ErroResponseApiAsaas apiAsaas = objectMapper
           .readValue(stringRetorno, new TypeReference<ErroResponseApiAsaas>() {});
 
+      String erro = apiAsaas.listaErros();
+
+      System.out.println("Erro ao efetuar cobrança: " + erro);
+
       return new ResponseEntity<String>("Erro ao efetuar cobrança: " + apiAsaas.listaErros(), HttpStatus.OK);
     }
 
@@ -243,6 +248,7 @@ public class PagamentoController implements Serializable {
 
     boletoJunoRepository.saveAllAndFlush(boletoJunos);
 
+    System.out.println(cartaoCredito.getStatus());
 
     if (cartaoCredito.getStatus().equalsIgnoreCase("CONFIRMED")) {
 

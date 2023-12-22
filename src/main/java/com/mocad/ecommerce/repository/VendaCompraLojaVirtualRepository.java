@@ -12,6 +12,7 @@ import java.util.List;
 
 
 @Repository
+@Transactional
 public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCompraLojaVirtual, Long> {
 
     @Query("SELECT v FROM VendaCompraLojaVirtual v WHERE v.id = ?1 AND v.excluido IS FALSE")

@@ -28,4 +28,5 @@ public class AsassControler {
   public String gerarCarneApiAsaas(@RequestBody ObjetoPostCarneJuno pessoa) throws Exception {
     return serviceJunoBoleto.gerarCarneApiAsaas(pessoa);
   }
+
 }

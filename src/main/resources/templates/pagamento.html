@@ -22,7 +22,7 @@
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.map"></script>
 
-  <script type="text/javascript" src="https://www.boletobancario.com/boletofacil/wro/direct-checkout.min.js"></script>
+<!--  <script type="text/javascript" src="https://www.boletobancario.com/boletofacil/wro/direct-checkout.min.js"></script>-->
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
@@ -370,7 +370,7 @@
   };
 
 
-  var isValidCardNumber = checkout.isValidCardNumber(cardData.cardNumber);
+  var isValidCardNumber = cardData.cardNumber != null && cardData.cardNumber.length == 16
 
   if (isValidCardNumber == false){
    alert('Número do cartão é inválido');
@@ -378,7 +378,7 @@
   }
 
 
-  var isValidSecurityCode = checkout.isValidSecurityCode(cardData.cardNumber, cvv);
+  var isValidSecurityCode = cardData.securityCode != null && cardData.securityCode.length == 3
 
   if (isValidSecurityCode == false){
    alert('Códivo CVV de segurança é inválido.');
@@ -386,7 +386,7 @@
   }
 
 
-  var isValidExpireDate = checkout.isValidExpireDate(cardData.expirationMonth, cardData.expirationYear);
+  var isValidExpireDate = cardData.expirationMonth != null && cardData.expirationYear != null;
 
   if (isValidExpireDate == false){
    alert('Data de válidade é inválida');
@@ -394,16 +394,7 @@
   }
 
 
-  var isValidCardData = checkout.isValidCardData(cardData, function(error) {
-
-   if (error.toString().includes('Invalid holder name', error)){
-     alert('Seu nome informado não está igual ao escrito no cartão de crédito.');
-   }else{
-     alert('Mensagem de erro: ' + error.toString());
-   }
-
-   return;
-  });
+  var isValidCardData = cardData != null;
 
 
 <!--  console.info('isValidCardData' + isValidCardData);-->
@@ -413,7 +404,7 @@
 
   if (isValidCardData && isValidExpireDate && isValidSecurityCode && isValidCardNumber){
 
-	  checkout.getCardHash(cardData, function(cardHash) {
+
 
       document.getElementById('buttonrealizarPagamento').disabled = true;
       document.getElementById('buttonrealizarPagamento').value = 'Efetuando pagamento...';
@@ -422,11 +413,10 @@
         method: 'POST',
         url: 'finalizarCompraCartao',
         data: {
-          cardHash: cardHash,
           cardNumber: cardData.cardNumber,
           holderName: cardData.holderName,
           securityCode: cardData.securityCode,
-          expirationMonth: cardData.expirationMonth,
+          expirationMonth: mesvalidade,
           expirationYear: cardData.expirationYear,
           idVendaCampo: idVendaCampo,
           cpf: cpf,
@@ -462,16 +452,12 @@
 
 
 
-		  }, function(error) {
-		      alert('Não foi possível gerar o HASH do cartão de crédito": ' + error);
-			  return;
+		  }else{
+       alert('O pagamento não pode ser realizado.');
+       return;
+      }
 
-		});
 
-	  }else {
-		  alert('O pagamento não pode ser realizado.');
-		  return;
-	  }
   }
 
 </script>
